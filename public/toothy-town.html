@@ -1,0 +1,3529 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Interactive dental-themed waiting room games for kids."
+    />
+    <meta name="theme-color" content="#f7f9f4" />
+    <title>Toothy Town — Dental Games for Kids</title>
+    <style>
+      /*
+       * TOOTHY TOWN — STANDALONE EDITION
+       * Everything needed to edit and run the app is in this one HTML file.
+       * Change the colors below, edit the game list near the bottom, and
+       * double-click this file to view your changes in a browser.
+       */
+      :root {
+        --background: #faf9f2;
+        --foreground: #354259;
+        --card: #ffffff;
+        --muted: #eef1f4;
+        --muted-foreground: #697487;
+        --border: #dce1e7;
+        --primary: #3fb58a;
+        --primary-dark: #2e8d6c;
+        --mint: #91ddbd;
+        --sky: #94d6ea;
+        --coral: #f18e75;
+        --honey: #f2ce60;
+        --lilac: #c8a7e8;
+        --arcade-blue: #24a7f2;
+        --arcade-green: #88c63d;
+        --arcade-yellow: #fec41a;
+        --arcade-orange: #fd930d;
+        --arcade-purple: #8461cd;
+        --arcade-pink: #fc5689;
+        --accent: #f6efd9;
+        --radius: 28px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        color: var(--foreground);
+        background: var(--background);
+        font-family:
+          ui-rounded, "Arial Rounded MT Bold", system-ui, -apple-system,
+          BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      button,
+      a {
+        font: inherit;
+      }
+
+      button {
+        color: inherit;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .hero {
+        display: flex;
+        justify-content: center;
+        padding: 32px 24px 20px;
+        text-align: center;
+      }
+
+      .hero-inner {
+        width: 100%;
+        max-width: 680px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 12px;
+        margin-bottom: 12px;
+        border-radius: 999px;
+        background: var(--accent);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .eyebrow span {
+        margin-right: 8px;
+      }
+
+      .logo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        user-select: none;
+      }
+
+      .logo img {
+        display: block;
+        width: min(100%, 15.5rem);
+        height: auto;
+      }
+
+      .logo-top {
+        display: flex;
+        align-items: flex-end;
+        margin-bottom: -4px;
+      }
+
+      .toothbrush {
+        position: relative;
+        display: flex;
+        width: 56px;
+        height: 80px;
+        margin-right: 4px;
+        transform: translateY(8px);
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .bristles {
+        display: flex;
+        width: 48px;
+        height: 24px;
+        justify-content: space-between;
+        padding: 2px 4px;
+        border-bottom: 4px solid rgb(148 214 234 / 0.3);
+        border-radius: 8px 8px 0 0;
+        background: white;
+        box-shadow: 0 2px 4px rgb(53 66 89 / 0.08);
+      }
+
+      .bristles i {
+        width: 6px;
+        height: 100%;
+        border-radius: 999px;
+        background: rgb(148 214 234 / 0.4);
+      }
+
+      .brush-handle {
+        position: relative;
+        width: 20px;
+        flex: 1;
+        border-bottom: 4px solid rgb(53 66 89 / 0.12);
+        border-radius: 0 0 16px 16px;
+        background: var(--sky);
+        box-shadow: 0 4px 8px rgb(53 66 89 / 0.1);
+      }
+
+      .brush-handle::after {
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        width: 8px;
+        height: 24px;
+        border-radius: 999px;
+        background: rgb(255 255 255 / 0.25);
+        content: "";
+        transform: translateX(-50%);
+      }
+
+      .logo-word {
+        display: flex;
+        align-items: flex-end;
+        color: var(--sky);
+        font-size: clamp(58px, 12vw, 72px);
+        font-weight: 800;
+        letter-spacing: -5px;
+        line-height: 1;
+      }
+
+      .tooth-letter {
+        position: relative;
+        color: white;
+        text-shadow: 0 4px 0 rgb(148 214 234 / 0.25);
+      }
+
+      .tooth-letter::after {
+        position: absolute;
+        top: 16px;
+        left: 12px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgb(255 255 255 / 0.6);
+        content: "";
+        filter: blur(1px);
+      }
+
+      .sparkle {
+        position: absolute;
+        top: -4px;
+        right: -3px;
+        color: var(--honey);
+        font-size: 18px;
+        animation: pulse 1.6s ease-in-out infinite;
+      }
+
+      .town {
+        padding: 3px 24px;
+        border: 2px solid rgb(148 214 234 / 0.25);
+        border-radius: 999px;
+        color: rgb(94 167 190);
+        background: rgb(255 255 255 / 0.55);
+        font-size: 36px;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        line-height: 1.2;
+        text-transform: uppercase;
+      }
+
+      .tagline {
+        margin: 12px 0 0;
+        color: var(--muted-foreground);
+        font-size: 16px;
+        font-weight: 650;
+      }
+
+      .games-section {
+        padding: 24px 24px 96px;
+        background: rgb(148 214 234 / 0.2);
+      }
+
+      .games-inner {
+        max-width: 1024px;
+        margin: 0 auto;
+      }
+
+      .section-heading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .section-heading img {
+        display: block;
+        width: auto;
+        height: 80px;
+        margin-bottom: 4px;
+        pointer-events: none;
+        user-select: none;
+        transform: rotate(-8deg);
+        transform-origin: bottom center;
+      }
+
+      .section-heading h1 {
+        margin: 0;
+        font-size: clamp(26px, 7vw, 40px);
+        font-weight: 900;
+        line-height: 1;
+      }
+
+      .section-heading p {
+        margin: 6px 0 0;
+        color: var(--muted-foreground);
+        font-size: 14px;
+        font-weight: 650;
+      }
+
+      .game-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+      }
+
+      .game-card {
+        display: flex;
+        min-width: 0;
+        padding: 20px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        color: inherit;
+        background: var(--card);
+        box-shadow: 0 2px 5px rgb(53 66 89 / 0.06);
+        cursor: pointer;
+        flex-direction: column;
+        text-align: left;
+        text-decoration: none;
+        transition:
+          transform 180ms ease,
+          box-shadow 180ms ease;
+      }
+
+      .game-card:hover {
+        box-shadow: 0 14px 28px rgb(53 66 89 / 0.13);
+        transform: translateY(-8px);
+      }
+
+      .game-card:active {
+        transform: scale(0.96);
+      }
+
+      .game-picture {
+        display: grid;
+        width: 100%;
+        aspect-ratio: 1;
+        margin-bottom: 16px;
+        border-radius: 20px;
+        font-size: 62px;
+        place-items: center;
+      }
+
+      .game-picture span {
+        transition: transform 180ms ease;
+      }
+
+      .game-card:hover .game-picture span {
+        transform: scale(1.12) rotate(3deg);
+      }
+
+      .game-card h2 {
+        margin: 0;
+        font-size: 20px;
+      }
+
+      .game-card p {
+        min-height: 40px;
+        margin: 4px 0 0;
+        color: var(--muted-foreground);
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.45;
+      }
+
+      .play {
+        margin-top: 16px;
+        color: var(--primary-dark);
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      .footer {
+        padding: 32px 24px;
+        border-top: 1px solid var(--border);
+        color: var(--muted-foreground);
+        font-size: 14px;
+        font-weight: 650;
+        text-align: center;
+      }
+
+      .game-screen {
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+      }
+
+      .game-header {
+        position: sticky;
+        z-index: 20;
+        top: 0;
+        padding: 16px;
+        border-bottom: 1px solid var(--border);
+        background: rgb(255 255 255 / 0.84);
+        backdrop-filter: blur(8px);
+      }
+
+      .game-header-inner {
+        display: flex;
+        max-width: 768px;
+        margin: 0 auto;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .stats {
+        display: flex;
+        gap: 16px;
+      }
+
+      .pill,
+      .button {
+        display: inline-flex;
+        min-height: 40px;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 16px;
+        border: 0;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      .button {
+        color: white;
+        background: var(--primary);
+        cursor: pointer;
+        text-decoration: none;
+        transition: transform 150ms ease;
+      }
+
+      .button:hover {
+        transform: scale(1.05);
+      }
+
+      .button.secondary {
+        color: var(--muted-foreground);
+        background: var(--muted);
+      }
+
+      .button.outline {
+        border: 2px solid var(--border);
+        color: var(--foreground);
+        background: var(--background);
+      }
+
+      .button.large {
+        padding: 14px 28px;
+        font-size: 18px;
+      }
+
+      .button.play-bubble-button {
+        min-height: 0;
+        margin-top: 32px;
+        padding: 18px 48px;
+        border-radius: 18px;
+        font-size: 32px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        line-height: 1;
+        box-shadow:
+          0 6px 0 var(--primary-dark),
+          0 12px 18px rgb(53 66 89 / 0.22);
+        text-shadow:
+          0 1px 0 rgb(255 255 255 / 0.45),
+          0 3px 0 var(--primary-dark),
+          0 6px 8px rgb(0 0 0 / 0.18);
+      }
+
+      .button.play-bubble-button:hover {
+        transform: translateY(-2px);
+      }
+
+      .button.play-bubble-button:active {
+        transform: translateY(4px);
+        box-shadow:
+          0 2px 0 var(--primary-dark),
+          0 6px 10px rgb(53 66 89 / 0.16);
+      }
+
+      .gold-burst-layer {
+        position: fixed;
+        inset: 0;
+        z-index: 15;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .gold-burst-flash {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle at var(--burst-x) var(--burst-y),
+          rgb(255 246 200 / 0.78) 0%,
+          rgb(255 224 122 / 0.5) 18%,
+          rgb(245 197 66 / 0.28) 40%,
+          rgb(245 197 66 / 0.1) 62%,
+          transparent 78%
+        );
+        animation: gold-burst-flash 1000ms ease-out forwards;
+      }
+
+      .gold-burst-glow {
+        position: absolute;
+        left: var(--burst-x);
+        top: var(--burst-y);
+        width: 240vmax;
+        height: 240vmax;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          #fff8d2 0%,
+          #ffe07a 10%,
+          #f5c542 24%,
+          rgb(245 197 66 / 0.42) 42%,
+          rgb(183 122 8 / 0.14) 58%,
+          transparent 70%
+        );
+        animation: gold-burst-expand 1050ms ease-out forwards;
+      }
+
+      .gold-burst-rays {
+        position: absolute;
+        left: var(--burst-x);
+        top: var(--burst-y);
+        width: 180vmax;
+        height: 180vmax;
+        border-radius: 50%;
+        background: repeating-conic-gradient(
+          from -8deg,
+          rgb(255 240 166 / 0) 0deg 16deg,
+          rgb(255 240 166 / 0.55) 18deg 22deg,
+          rgb(255 240 166 / 0) 24deg 45deg
+        );
+        mask-image: radial-gradient(
+          circle,
+          rgb(0 0 0 / 0.9) 0%,
+          transparent 64%
+        );
+        animation: gold-burst-rays 1000ms ease-out forwards;
+      }
+
+      .gold-burst-sparkle {
+        position: absolute;
+        left: var(--burst-x);
+        top: var(--burst-y);
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #fff8d2;
+        box-shadow: 0 0 10px #f5c542;
+        animation: gold-burst-sparkle 1000ms ease-out forwards;
+        animation-delay: calc(var(--sparkle-i) * 18ms);
+      }
+
+      .gold-burst-label {
+        position: absolute;
+        left: var(--burst-x);
+        top: var(--burst-y);
+        z-index: 1;
+        margin: 0;
+        color: #ffe07a;
+        font-size: clamp(2.1rem, 9vw, 3.4rem);
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        line-height: 1;
+        white-space: nowrap;
+        text-shadow:
+          0 1px 0 #fff8d2,
+          0 3px 0 #b77a08,
+          0 6px 12px rgb(183 122 8 / 0.35),
+          0 0 22px rgb(255 240 166 / 0.9);
+        animation: gold-burst-label 1000ms cubic-bezier(0.18, 1.4, 0.32, 1)
+          forwards;
+      }
+
+      @keyframes gold-burst-expand {
+        0% {
+          opacity: 0.95;
+          transform: translate(-50%, -50%) scale(0.04);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+
+      @keyframes gold-burst-flash {
+        0% {
+          opacity: 0.95;
+        }
+        28% {
+          opacity: 0.7;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      @keyframes gold-burst-rays {
+        0% {
+          opacity: 0.85;
+          transform: translate(-50%, -50%) scale(0.08) rotate(0deg);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(1) rotate(22deg);
+        }
+      }
+
+      @keyframes gold-burst-sparkle {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) rotate(calc(var(--sparkle-i) * 45deg))
+            translateY(0) scale(0.2);
+        }
+        18% {
+          opacity: 1;
+          transform: translate(-50%, -50%) rotate(calc(var(--sparkle-i) * 45deg))
+            translateY(-8px) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -50%) rotate(calc(var(--sparkle-i) * 45deg))
+            translateY(-36vmin) scale(0.25);
+        }
+      }
+
+      @keyframes gold-burst-label {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.35);
+        }
+        18% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1.16);
+        }
+        32% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+        }
+        72% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(1.06);
+        }
+      }
+
+      .catch-pop-layer {
+        position: fixed;
+        inset: 0;
+        z-index: 14;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .catch-pop-shard {
+        position: absolute;
+        left: var(--burst-x);
+        top: var(--burst-y);
+        width: 7px;
+        height: 7px;
+        border-radius: 2px;
+        background: #c99cf2;
+        box-shadow: 0 0 0 1px #6e3cad;
+        animation: catch-pop-break 480ms ease-out forwards;
+      }
+
+      .catch-pop-label {
+        position: absolute;
+        left: var(--burst-x);
+        top: var(--burst-y);
+        z-index: 1;
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        line-height: 1;
+        white-space: nowrap;
+        animation: catch-pop-float 500ms ease-out forwards;
+      }
+
+      .catch-pop-label-10 {
+        color: #35cf7b;
+        text-shadow:
+          0 1px 0 #fff,
+          0 2px 0 #15965f;
+      }
+
+      .catch-pop-label-15 {
+        color: #59bff2;
+        text-shadow:
+          0 1px 0 #fff,
+          0 2px 0 #247fb5;
+      }
+
+      .catch-pop-label-20 {
+        color: #c99cf2;
+        text-shadow:
+          0 1px 0 #fff,
+          0 2px 0 #6e3cad;
+      }
+
+      @keyframes catch-pop-float {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.7);
+        }
+        16% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1.08);
+        }
+        28% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, calc(-50% - 28px)) scale(1);
+        }
+      }
+
+      @keyframes catch-pop-break {
+        0% {
+          opacity: 1;
+          transform: translate(-50%, -50%) rotate(calc(var(--sparkle-i) * 90deg))
+            translateY(0) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -50%) rotate(calc(var(--sparkle-i) * 90deg))
+            translateY(-22px) scale(0.4);
+        }
+      }
+
+      .score-pill {
+        background: var(--mint);
+      }
+
+      .time-pill,
+      .high-score-pill {
+        background: var(--honey);
+      }
+
+      .start-screen {
+        display: flex;
+        width: 100%;
+        max-width: 540px;
+        margin: 0 auto;
+        padding: 40px 24px 48px;
+        flex: 1;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .start-screen h1.cavity-logo {
+        display: flex;
+        margin: 0;
+        flex-direction: column;
+        align-items: center;
+        font-size: unset;
+        font-weight: unset;
+        user-select: none;
+      }
+
+      .cavity-logo-mark {
+        display: block;
+        width: 72px;
+        height: 72px;
+        margin-bottom: 12px;
+        object-fit: contain;
+      }
+
+      .blast-logo-mark {
+        display: block;
+        width: auto;
+        height: 100px;
+        margin-bottom: 12px;
+        object-fit: contain;
+      }
+
+      .cavity-logo-cavity {
+        font-size: clamp(36px, 7vw, 48px);
+        font-weight: 800;
+        line-height: 1;
+        letter-spacing: -0.02em;
+      }
+
+      .cavity-logo-catch {
+        margin-top: 6px;
+        color: var(--primary);
+        font-size: clamp(26px, 5vw, 32px);
+        font-weight: 800;
+        line-height: 1;
+        letter-spacing: 0.14em;
+      }
+
+      .how-to {
+        position: relative;
+        width: 100%;
+        margin-top: 32px;
+        padding: 20px 80px 20px 22px;
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        background: var(--card);
+        text-align: left;
+        box-shadow: 0 1px 2px rgb(53 66 89 / 0.06);
+        overflow: visible;
+      }
+
+      .how-to-toothy {
+        position: absolute;
+        top: -12px;
+        right: -8px;
+        z-index: 2;
+        width: 86px;
+        height: auto;
+        pointer-events: none;
+        transform: rotate(16deg);
+      }
+
+      .how-to-toothy-wink {
+        display: grid;
+        width: 86px;
+        transform-origin: 50% 88%;
+        animation: toothy-wink-squish 3.4s ease-in-out infinite;
+      }
+
+      .how-to-toothy-wink img {
+        grid-area: 1 / 1;
+        width: 86px;
+        height: auto;
+        transform: none;
+      }
+
+      .how-to-toothy-open {
+        animation: toothy-wink-open 3.4s ease-in-out infinite;
+      }
+
+      .how-to-toothy-shut {
+        animation: toothy-wink-shut 3.4s ease-in-out infinite;
+      }
+
+      @keyframes toothy-wink-open {
+        0%, 70%, 88%, 100% { opacity: 1; }
+        74%, 84% { opacity: 0; }
+      }
+
+      @keyframes toothy-wink-shut {
+        0%, 70%, 88%, 100% { opacity: 0; }
+        74%, 84% { opacity: 1; }
+      }
+
+      @keyframes toothy-wink-squish {
+        0%, 70%, 90%, 100% { transform: rotate(16deg) scale(1, 1); }
+        75% { transform: rotate(16deg) scale(1.055, 0.94); }
+        81% { transform: rotate(16deg) scale(0.96, 1.05); }
+      }
+
+      .how-to h2 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 900;
+      }
+
+      .how-to p {
+        margin: 8px 0 0;
+        color: var(--muted-foreground);
+        font-size: 16px;
+        font-weight: 650;
+        line-height: 1.45;
+      }
+
+      .germ-guide {
+        margin: 20px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .germ-guide li {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .germ-guide li + li {
+        margin-top: 12px;
+      }
+
+      .germ-guide img {
+        width: 40px;
+        height: 40px;
+        overflow: visible;
+        object-fit: contain;
+      }
+
+      .germ-guide span {
+        font-size: 16px;
+        font-weight: 800;
+      }
+
+      .germ-key {
+        position: absolute;
+        z-index: 10;
+        top: 8px;
+        right: 8px;
+        padding: 8px 10px;
+        border-radius: 16px;
+        background: rgb(255 255 255 / 0.92);
+        box-shadow: 0 1px 2px rgb(53 66 89 / 0.12);
+        pointer-events: none;
+      }
+
+      .germ-key ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .germ-key li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .germ-key li + li {
+        margin-top: 4px;
+      }
+
+      .germ-key img {
+        width: 22px;
+        height: 22px;
+      }
+
+      .germ-key .key-copy {
+        display: flex;
+        min-width: 0;
+        flex-direction: column;
+        line-height: 1.15;
+      }
+
+      .germ-key .key-points {
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .germ-key .key-rule {
+        color: var(--muted-foreground);
+        font-size: 10px;
+        font-weight: 700;
+      }
+
+      .result-score {
+        margin: 16px 0 0;
+        color: var(--primary);
+        font-size: 48px;
+        font-weight: 900;
+      }
+
+      .game-stage {
+        position: relative;
+        width: 100%;
+        max-width: 430px;
+        min-height: 620px;
+        margin: 0 auto;
+        overflow: hidden;
+        background: #fdceb2;
+        flex: 1;
+      }
+
+      .blast-stage {
+        background: #d7f3e6;
+        touch-action: none;
+        user-select: none;
+        min-height: calc(100vh - 170px);
+      }
+
+      .blast-bug {
+        position: absolute;
+        z-index: 5;
+        width: 48px;
+        height: 48px;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+      }
+
+      .blast-bug img {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      .blast-brush {
+        position: absolute;
+        z-index: 10;
+        width: 48px;
+        height: 283px;
+        transform: translate(-50%, 0);
+        pointer-events: none;
+      }
+
+      .blast-brush img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .blast-brush.tool-cursor-spray,
+      .blast-brush.tool-cursor-rinse {
+        transform: translate(-50%, -20%);
+        transform-origin: 50% 72%;
+      }
+
+      .blast-brush.tool-cursor-rinse {
+        transition: transform 180ms ease;
+      }
+
+      .blast-brush.tool-cursor-rinse.tool-rinse-use {
+        transform: translate(-50%, -22%) rotate(-38deg);
+      }
+
+      .spray-stream {
+        position: absolute;
+        left: 50%;
+        top: 6%;
+        z-index: 2;
+        width: 0;
+        height: 0;
+      }
+
+      .spray-stream.hidden {
+        display: none;
+      }
+
+      .spray-stream::before {
+        content: "";
+        position: absolute;
+        left: -30px;
+        top: -46px;
+        width: 60px;
+        height: 58px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgb(180 236 255 / 0.7), rgb(61 182 232 / 0.35) 40%, transparent 72%);
+        animation: spray-mist 260ms ease-in-out infinite;
+      }
+
+      .spray-bubble {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: var(--size, 12px);
+        height: var(--size, 12px);
+        border: 2px solid #1a7aa8;
+        border-radius: 50%;
+        background: radial-gradient(circle at 30% 28%, #fff 0%, #9fe4f6 38%, #3db6e8 78%);
+        animation: spray-bubble 400ms ease-out infinite;
+        animation-delay: var(--delay, 0ms);
+      }
+
+      .spray-bubble-1 { --dx: -8px; --dy: -40px; --size: 13px; --delay: 0ms; }
+      .spray-bubble-2 { --dx: 16px; --dy: -36px; --size: 10px; --delay: 40ms; }
+      .spray-bubble-3 { --dx: -22px; --dy: -28px; --size: 15px; --delay: 80ms; }
+      .spray-bubble-4 { --dx: 24px; --dy: -48px; --size: 9px; --delay: 120ms; }
+      .spray-bubble-5 { --dx: 4px; --dy: -54px; --size: 12px; --delay: 160ms; }
+      .spray-bubble-6 { --dx: -28px; --dy: -44px; --size: 8px; --delay: 200ms; }
+      .spray-bubble-7 { --dx: 20px; --dy: -22px; --size: 14px; --delay: 70ms; }
+      .spray-bubble-8 { --dx: -14px; --dy: -52px; --size: 11px; --delay: 110ms; }
+      .spray-bubble-9 { --dx: 10px; --dy: -30px; --size: 7px; --delay: 150ms; }
+      .spray-bubble-10 { --dx: -4px; --dy: -24px; --size: 16px; --delay: 30ms; }
+
+      @keyframes spray-bubble {
+        0% { opacity: 0.95; transform: translate(-50%, 0) scale(0.35); }
+        100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.2); }
+      }
+
+      @keyframes spray-mist {
+        0%, 100% { opacity: 0.55; transform: scale(0.86); }
+        50% { opacity: 1; transform: scale(1.12); }
+      }
+
+      .food-soaking {
+        z-index: 25;
+        transform: translate(-50%, -50%);
+        filter: drop-shadow(0 0 8px rgb(90 200 240 / 0.9));
+        animation: food-soak 200ms ease-in-out infinite;
+      }
+
+      @keyframes food-soak {
+        0%, 100% { transform: translate(-50%, -50%) scale(1); }
+        50% { transform: translate(-50%, -56%) scale(1.08); }
+      }
+
+      .blast-dirt {
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .blast-dirt-base {
+        z-index: 3;
+      }
+
+      .blast-film {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .blast-dock {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        background: #c7ead9;
+        padding: 12px;
+      }
+
+      .blast-dock.hidden {
+        display: none;
+      }
+
+      .tool-dock-btn {
+        display: flex;
+        min-width: 5.6rem;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.2rem;
+        border-radius: 1.25rem;
+        border: 3px solid transparent;
+        background: #fff;
+        padding: 0.45rem 0.7rem 0.5rem;
+        font-family: inherit;
+        font-size: 0.85rem;
+        font-weight: 700;
+      }
+
+      .tool-dock-btn img {
+        width: 44px;
+        height: 44px;
+        object-fit: contain;
+      }
+
+      .tool-dock-btn-on {
+        border-color: #3db6e8;
+        background: #fff8d2;
+      }
+
+      .blast-treat {
+        position: absolute;
+        z-index: 2;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        transform: translate(-50%, -50%);
+      }
+
+      .blast-treat.treat-ready {
+        z-index: 2;
+      }
+
+      .food-wiggle {
+        animation: food-wiggle 180ms ease-in-out 2;
+      }
+
+      .blast-treat.food-pop,
+      .bb-food-popping {
+        z-index: 30;
+        transform: translate(-50%, -50%);
+        transform-origin: center center;
+        filter: drop-shadow(0 10px 12px rgb(40 50 70 / 0.28));
+        will-change: transform;
+      }
+
+      .pop-food-label {
+        position: absolute;
+        left: var(--burst-x);
+        top: var(--burst-y);
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #3db6e8;
+        animation: catch-pop-float 500ms ease-out forwards;
+      }
+
+      @keyframes food-wiggle {
+        0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+        25% { transform: translate(-42%, -54%) rotate(-12deg); }
+        75% { transform: translate(-58%, -46%) rotate(12deg); }
+      }
+
+      @keyframes food-pop {
+        0% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+        12% { transform: translate(-50%, calc(-50% + 16px)) scale(1.3, 0.64) rotate(-10deg); }
+        28% { transform: translate(-50%, calc(-50% - 74px)) scale(1.2) rotate(-16deg); }
+        34% { transform: translate(-50%, calc(-50% - 78px)) scale(1.08) rotate(8deg); }
+        100% { transform: translate(calc(-50% + 24px), calc(-50% + 520px)) scale(1) rotate(400deg); }
+      }
+
+      .blast-treat img {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      .blast-found {
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        padding: 0.55rem 1.15rem;
+        border-radius: 999px;
+        background: rgb(255 255 255 / 0.94);
+        font-size: 1.05rem;
+        font-weight: 800;
+        line-height: 1.15;
+        box-shadow: 0 2px 6px rgb(53 66 89 / 0.16);
+        pointer-events: none;
+      .blast-found.clean-chip-done {
+        background: #fff4b8;
+        color: #6a4b00;
+      }
+
+      .treat-ready {
+        animation: treat-ready-bounce 700ms ease-in-out infinite;
+      }
+
+      .treat-ready img {
+        filter: drop-shadow(0 0 6px rgb(255 240 166 / 0.9));
+      }
+
+      @keyframes treat-ready-bounce {
+        0%,
+        100% {
+          transform: translate(-50%, -50%) scale(1) rotate(-4deg);
+        }
+        50% {
+          transform: translate(-50%, -50%) scale(1.08) rotate(4deg);
+        }
+      }
+
+      .finish-tooth-sparkle {
+        width: 160px;
+        height: auto;
+        margin-bottom: 16px;
+        animation: finish-tooth-glow 1.4s ease-in-out infinite;
+      }
+
+      @keyframes finish-tooth-glow {
+        0%,
+        100% {
+          filter: drop-shadow(0 0 6px rgb(255 255 255 / 0.4));
+        }
+        50% {
+          filter: drop-shadow(0 0 18px rgb(255 244 170 / 0.9));
+        }
+      }
+
+      .mouth {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .mouth.level-2-art {
+        object-fit: contain;
+      }
+
+      .germ {
+        position: absolute;
+        z-index: 5;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        cursor: pointer;
+        font-size: clamp(48px, 8vw, 64px);
+        transform: translate(-50%, -50%);
+      }
+
+      .germ-pop {
+        display: inline-block;
+        animation: germ-pop 500ms ease-out var(--germ-enter-delay, 0ms) both;
+      }
+
+      .germ-shake {
+        display: inline-block;
+        animation: germ-shake var(--germ-shake-duration, 1.2s) ease-in-out
+          var(--germ-shake-delay, 500ms) infinite both;
+      }
+
+      .germ-move {
+        display: inline-block;
+        animation: germ-move var(--germ-move-duration, 1.8s) ease-in-out
+          var(--germ-move-delay, 500ms) infinite both;
+      }
+
+      .coming-soon {
+        display: flex;
+        min-height: 100vh;
+        padding: 24px;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .result {
+        display: flex;
+        padding: 40px 24px 48px;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        flex: 1;
+      }
+
+      .big-emoji {
+        margin-bottom: 24px;
+        font-size: 72px;
+      }
+
+      .result h1,
+      .coming-soon h1 {
+        margin: 0;
+        font-size: clamp(34px, 6vw, 44px);
+        font-weight: 900;
+      }
+
+      .result p,
+      .coming-soon p {
+        max-width: 460px;
+        margin: 16px 0 0;
+        color: var(--muted-foreground);
+        font-size: 19px;
+        font-weight: 700;
+        line-height: 1.5;
+      }
+
+      .result p.result-score {
+        margin: 16px 0 0;
+        color: var(--primary);
+        font-size: 48px;
+        font-weight: 900;
+      }
+
+      .result #result-best {
+        color: var(--foreground);
+      }
+
+      .actions {
+        display: flex;
+        margin-top: 32px;
+        gap: 12px;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.55;
+          transform: scale(0.8);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.15);
+        }
+      }
+
+      @keyframes germ-pop {
+        0% {
+          transform: scale(0.075);
+        }
+        50% {
+          transform: scale(0.5);
+        }
+        to {
+          transform: scale(var(--germ-scale, 1));
+        }
+      }
+
+      @keyframes germ-shake {
+        0%,
+        100% {
+          transform: rotate(60deg);
+        }
+        50% {
+          transform: rotate(110deg);
+        }
+      }
+
+      @keyframes germ-move {
+        0%,
+        100% {
+          transform: translate(0, 0);
+        }
+        33% {
+          transform: translate(var(--germ-move-x), var(--germ-move-y));
+        }
+        66% {
+          transform: translate(
+            var(--germ-move-back-x),
+            var(--germ-move-back-y)
+          );
+        }
+      }
+
+      @keyframes bug-scrub {
+        0%,
+        100% {
+          transform: rotate(-8deg);
+        }
+        50% {
+          transform: rotate(8deg);
+        }
+      }
+
+      .animate-bug-scrub {
+        animation: bug-scrub 180ms ease-in-out infinite;
+      }
+
+      .scrub-pop-layer,
+      .sparkle-pop-layer {
+        position: fixed;
+        inset: 0;
+        z-index: 14;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .scrub-pop-label,
+      .sparkle-pop-label {
+        position: absolute;
+        left: var(--burst-x);
+        top: var(--burst-y);
+        z-index: 1;
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        line-height: 1;
+        white-space: nowrap;
+        animation: catch-pop-float 500ms ease-out forwards;
+      }
+
+      .scrub-pop-label-10 {
+        color: #e89a3a;
+        text-shadow:
+          0 1px 0 #fff,
+          0 2px 0 #b86a14;
+      }
+
+      .scrub-pop-label-20 {
+        color: #8fbe22;
+        text-shadow:
+          0 1px 0 #fff,
+          0 2px 0 #6f9a18;
+      }
+
+      .scrub-pop-label-15 {
+        color: #e85a8a;
+        text-shadow:
+          0 1px 0 #fff,
+          0 2px 0 #b83060;
+      }
+
+      .scrub-pop-label-25 {
+        color: #7a5cff;
+        text-shadow:
+          0 1px 0 #fff,
+          0 2px 0 #4a32b0;
+      }
+
+      .scrub-pop-label-30 {
+        color: #3db6e8;
+        text-shadow:
+          0 1px 0 #fff,
+          0 2px 0 #1a7aa8;
+      }
+
+      .sparkle-pop-glow {
+        position: absolute;
+        left: var(--burst-x);
+        top: var(--burst-y);
+        width: 10rem;
+        height: 10rem;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          #fff8d2 0%,
+          rgb(255 224 122 / 0.55) 18%,
+          rgb(245 197 66 / 0.2) 42%,
+          transparent 68%
+        );
+        animation: sparkle-pop-expand 850ms ease-out forwards;
+      }
+
+      .sparkle-pop-label {
+        color: #ffe07a;
+        font-size: clamp(1.6rem, 6vw, 2.4rem);
+        text-shadow:
+          0 1px 0 #fff8d2,
+          0 3px 0 #b77a08,
+          0 0 16px rgb(255 240 166 / 0.8);
+        animation: catch-pop-float 850ms ease-out forwards;
+      }
+
+      @keyframes sparkle-pop-expand {
+        0% {
+          opacity: 0.9;
+          transform: translate(-50%, -50%) scale(0.08);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+
+      .match-stage {
+        display: grid;
+        width: 100%;
+        max-width: 430px;
+        margin: 0 auto;
+        padding: 20px 16px 28px;
+        flex: 1;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        align-content: center;
+        gap: 10px;
+      }
+
+      .match-card {
+        aspect-ratio: 0.82;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        perspective: 800px;
+        cursor: pointer;
+      }
+
+      .match-card-inner {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        transition: transform 280ms ease;
+      }
+
+      .match-card.is-up .match-card-inner {
+        transform: rotateY(180deg);
+      }
+
+      .match-card-back,
+      .match-card-face {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        box-shadow: 0 3px 0 rgb(53 66 89 / 0.12);
+      }
+
+      .match-card-back {
+        background: #fff;
+        padding: 4px;
+      }
+
+      .match-card-back img {
+        width: 86%;
+        height: 86%;
+        object-fit: contain;
+      }
+
+      .match-card-face {
+        gap: 4px;
+        padding: 6px 4px 8px;
+        background: #fff;
+        transform: rotateY(180deg);
+        box-shadow:
+          0 3px 0 rgb(53 66 89 / 0.12),
+          inset 0 0 0 2px #efe7ff;
+      }
+
+      .match-card.is-matched .match-card-face {
+        box-shadow:
+          0 3px 0 rgb(53 66 89 / 0.12),
+          inset 0 0 0 3px #88c63d;
+      }
+
+      .match-card-face img {
+        width: 48px;
+        height: 48px;
+        object-fit: contain;
+      }
+
+      .match-card-name {
+        color: var(--foreground);
+        font-size: 12px;
+        font-weight: 800;
+        line-height: 1.1;
+        text-align: center;
+      }
+
+      .match-guide {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin: 20px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .match-guide li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      .match-guide img {
+        width: 36px;
+        height: 36px;
+        object-fit: contain;
+      }
+
+      .pairs-pill {
+        background: #8461cd;
+        color: #fff;
+      }
+
+      @media (max-width: 760px) {
+        .game-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 520px) {
+        .hero {
+          padding: 28px 18px 16px;
+        }
+
+        .logo img {
+          width: min(100%, 15.5rem);
+        }
+
+        .game-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 12px;
+        }
+
+        .game-card p {
+          min-height: 0;
+        }
+
+        .game-picture {
+          aspect-ratio: 5 / 3;
+        }
+
+        .game-header {
+          padding: 12px;
+        }
+
+        .game-header-inner,
+        .stats {
+          gap: 8px;
+        }
+
+        .pill,
+        .button {
+          padding: 8px 12px;
+          font-size: 13px;
+        }
+
+        .game-stage {
+          min-height: calc(100vh - 65px);
+        }
+
+        .blast-stage {
+          min-height: calc(100vh - 170px);
+        }
+
+        .actions {
+          flex-direction: column;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *:not(.bb-food-popping):not(.food-pop),
+        *:not(.bb-food-popping):not(.food-pop)::before,
+        *:not(.bb-food-popping):not(.food-pop)::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main id="home-screen">
+      <section class="hero">
+        <div class="hero-inner">
+          <div class="eyebrow">
+            <span>🦷</span>Interactive waiting room games for kids
+          </div>
+          <div class="logo" aria-label="Smile Arcade">
+            <img
+              src="./smile-arcade-logo.png"
+              alt="Smile Arcade"
+              width="1296"
+              height="789"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section class="games-section">
+        <div class="games-inner">
+          <div class="section-heading">
+            <img src="./toothy-happy.png" alt="" width="254" height="291" />
+            <div>
+              <h1>Pick a game</h1>
+              <p>Toothy’s ready. Tap a card.</p>
+            </div>
+          </div>
+          <div class="game-grid" id="game-grid"></div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        Toothy Town · Made for tiny patients · Ask a grown-up if you need help
+      </footer>
+    </main>
+
+    <main id="cavity-screen" class="game-screen hidden">
+      <header class="game-header">
+        <div class="game-header-inner">
+          <button class="button secondary" type="button" data-home>
+            ← Back
+          </button>
+          <div class="stats hidden" id="play-stats">
+            <div class="pill score-pill">Score: <span id="score">0</span></div>
+            <div class="pill time-pill">
+              Time: <span id="time-left">45</span>s
+            </div>
+          </div>
+          <div class="pill high-score-pill hidden" id="high-score-pill">
+            High score: <span id="header-high-score">0</span>
+          </div>
+        </div>
+      </header>
+      <section class="start-screen" id="cavity-start">
+        <h1 class="cavity-logo">
+          <img class="cavity-logo-mark" src="./germ.svg" alt="" />
+          <span class="cavity-logo-cavity">Cavity</span>
+          <span class="cavity-logo-catch">Catch</span>
+        </h1>
+        <button class="button play-bubble-button" type="button" id="start-play">
+          Play
+        </button>
+        <div class="how-to">
+          <img class="how-to-toothy" src="./toothy-grin.png" alt="" />
+          <h2>How to play</h2>
+          <p>
+            Tap the germs on the teeth before time runs out. You have 45
+            seconds.
+          </p>
+          <ul class="germ-guide">
+            <li>
+              <img src="./germ.svg" alt="" />
+              <span>Tap it once to catch it! · 10 points</span>
+            </li>
+            <li>
+              <img src="./germ-blue.svg" alt="" />
+              <span>Catch it as it moves! · 15 points</span>
+            </li>
+            <li>
+              <img src="./germ-purple.svg" alt="" />
+              <span>Break its shell, then tap it to catch it! · 20 points</span>
+            </li>
+            <li>
+              <img src="./germ-gold.svg" alt="" />
+              <span>Rare! Tap it once for a big bonus! · 50 points</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <section class="game-stage hidden" id="game-stage" aria-live="polite">
+        <img
+          class="mouth level-2-art"
+          src="./brush-blast-level-2.png"
+          alt=""
+          draggable="false"
+        />
+        <aside class="germ-key" id="germ-key" aria-label="Germ point key">
+          <ul>
+            <li>
+              <img src="./germ.svg" alt="" />
+              <span class="key-copy">
+                <span class="key-points">10 points</span>
+                <span class="key-rule">1 tap</span>
+              </span>
+            </li>
+            <li>
+              <img src="./germ-blue.svg" alt="" />
+              <span class="key-copy">
+                <span class="key-points">15 points</span>
+                <span class="key-rule">Moves around</span>
+              </span>
+            </li>
+            <li>
+              <img src="./germ-purple.svg" alt="" />
+              <span class="key-copy">
+                <span class="key-points">20 points</span>
+                <span class="key-rule">2 taps</span>
+              </span>
+            </li>
+            <li>
+              <img src="./germ-gold.svg" alt="" />
+              <span class="key-copy">
+                <span class="key-points">50 points</span>
+                <span class="key-rule">Rare · 1 tap</span>
+              </span>
+            </li>
+          </ul>
+        </aside>
+      </section>
+      <section class="result hidden" id="game-result">
+        <div class="big-emoji" id="result-emoji">🎉</div>
+        <h1 id="result-title">Great brushing!</h1>
+        <p class="result-score hidden" id="result-score">0</p>
+        <p id="result-message">You scored 0 points!</p>
+        <p id="result-best" class="hidden">High score to beat: 0</p>
+        <div class="actions">
+          <button class="button large" type="button" id="play-again">
+            Play Again
+          </button>
+          <button
+            class="button outline large"
+            type="button"
+            data-home
+          >
+            More Games
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <main id="blast-screen" class="game-screen hidden">
+      <header class="game-header">
+        <div class="game-header-inner">
+          <button class="button secondary" type="button" data-home>
+            ← Back
+          </button>
+          <div class="stats hidden" id="blast-play-stats">
+            <div class="pill score-pill">Level <span id="blast-level-label">1</span></div>
+          </div>
+        </div>
+      </header>
+      <section class="start-screen" id="blast-start">
+        <h1 class="cavity-logo">
+          <img class="blast-logo-mark" src="./brush-blast-toothbrush-mark.png" alt="" />
+          <span class="cavity-logo-cavity">Brush</span>
+          <span class="cavity-logo-catch">Blast</span>
+        </h1>
+        <button class="button play-bubble-button" type="button" id="blast-start-play">
+          Play
+        </button>
+        <div class="how-to">
+          <span class="how-to-toothy how-to-toothy-wink">
+            <img class="how-to-toothy-open" src="./toothy-smile.png" alt="" />
+            <img class="how-to-toothy-shut" src="./toothy-wink.png" alt="" />
+          </span>
+          <h2>How to play</h2>
+          <p>
+            Pick a tool and clean the tooth. Each tool works on one kind of
+            gunk. Finish with a rinse to make it pearly white!
+          </p>
+          <ul class="germ-guide">
+            <li>
+              <img src="./brush-blast-toothbrush-mark.png" alt="" />
+              <span>Brush the brown plaque</span>
+            </li>
+            <li>
+              <img src="./tool-sprayer.svg" alt="" />
+              <span>Blast food after you brush it free</span>
+            </li>
+            <li>
+              <img src="./tool-rinse.svg" alt="" />
+              <span>Rinse for a shiny smile</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <section
+        class="game-stage blast-stage hidden"
+        id="blast-stage"
+        aria-live="polite"
+      >
+        <img
+          class="mouth"
+          src="./brush-tooth.svg"
+          alt=""
+          draggable="false"
+        />
+        <canvas id="blast-film" class="blast-film" aria-hidden="true"></canvas>
+        <div id="blast-treats"></div>
+        <canvas id="blast-dirt-base" class="blast-dirt blast-dirt-base" aria-hidden="true"></canvas>
+        <canvas id="blast-dirt" class="blast-dirt" aria-hidden="true"></canvas>
+        <div class="blast-found" id="blast-found">Clean 0%</div>
+        <div class="blast-brush" id="blast-brush">
+          <img
+            src="./brush-blast-toothbrush-idle.png"
+            alt=""
+            draggable="false"
+            id="blast-brush-img"
+          />
+          <div class="spray-stream hidden" id="blast-spray-stream" aria-hidden="true">
+            <span class="spray-bubble spray-bubble-1"></span>
+            <span class="spray-bubble spray-bubble-2"></span>
+            <span class="spray-bubble spray-bubble-3"></span>
+            <span class="spray-bubble spray-bubble-4"></span>
+            <span class="spray-bubble spray-bubble-5"></span>
+            <span class="spray-bubble spray-bubble-6"></span>
+            <span class="spray-bubble spray-bubble-7"></span>
+            <span class="spray-bubble spray-bubble-8"></span>
+            <span class="spray-bubble spray-bubble-9"></span>
+            <span class="spray-bubble spray-bubble-10"></span>
+          </div>
+        </div>
+      </section>
+      <div class="blast-dock hidden" id="blast-dock">
+        <button type="button" class="tool-dock-btn tool-dock-btn-on" data-tool="brush">
+          <img src="./toothbrush.svg" alt="" />
+          <span>Brush</span>
+        </button>
+        <button type="button" class="tool-dock-btn" data-tool="spray">
+          <img src="./tool-sprayer.svg" alt="" />
+          <span>Blast</span>
+        </button>
+        <button type="button" class="tool-dock-btn" data-tool="rinse">
+          <img src="./tool-rinse.svg" alt="" />
+          <span>Rinse</span>
+        </button>
+      </div>
+      <section class="result hidden" id="blast-result">
+        <img
+          class="finish-tooth-sparkle"
+          src="./brush-tooth-clean.png"
+          alt=""
+          width="160"
+        />
+        <h1 id="blast-result-title">All clean!</h1>
+        <p id="blast-result-message">That tooth is pearly white.</p>
+        <div class="actions">
+          <button class="button large hidden" type="button" id="blast-next-level">
+            Next Level
+          </button>
+          <button class="button large" type="button" id="blast-play-again">
+            Play Again
+          </button>
+          <button class="button outline large" type="button" data-home>
+            More Games
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <main id="match-screen" class="game-screen hidden">
+      <header class="game-header">
+        <div class="game-header-inner">
+          <button class="button secondary" type="button" data-home>
+            ← Back
+          </button>
+          <div class="stats hidden" id="match-play-stats">
+            <div class="pill pairs-pill">Pairs <span id="match-pairs">0</span>/6</div>
+            <div class="pill time-pill">Moves <span id="match-moves">0</span></div>
+          </div>
+        </div>
+      </header>
+      <section class="start-screen" id="match-start">
+        <h1 class="cavity-logo">
+          <img class="cavity-logo-mark" src="./match-tooth.png" alt="" />
+          <span class="cavity-logo-cavity">Smile</span>
+          <span class="cavity-logo-catch">Match</span>
+        </h1>
+        <button class="button play-bubble-button" type="button" id="match-start-play">
+          Play
+        </button>
+        <div class="how-to">
+          <img class="how-to-toothy" src="./toothy-smile.png" alt="" />
+          <h2>How to play</h2>
+          <p>
+            Flip two cards. Find the matching pair of each dental tool. Match
+            every pair to win!
+          </p>
+          <ul class="match-guide">
+            <li><img src="./match-toothbrush.png" alt="" />Toothbrush</li>
+            <li><img src="./match-floss.png" alt="" />Floss</li>
+            <li><img src="./match-toothpaste.png" alt="" />Toothpaste</li>
+            <li><img src="./match-mirror.png" alt="" />Mirror</li>
+            <li><img src="./match-cup.png" alt="" />Cup</li>
+            <li><img src="./match-tooth.png" alt="" />Tooth</li>
+          </ul>
+        </div>
+      </section>
+      <section class="match-stage hidden" id="match-stage" aria-live="polite"></section>
+      <section class="result hidden" id="match-result">
+        <div class="big-emoji">🎉</div>
+        <h1>All matched!</h1>
+        <p id="match-result-message">You found every pair.</p>
+        <div class="actions">
+          <button class="button large" type="button" id="match-play-again">
+            Play Again
+          </button>
+          <button class="button outline large" type="button" data-home>
+            More Games
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <main id="coming-screen" class="coming-soon hidden">
+      <div class="big-emoji">🚧</div>
+      <h1><span id="coming-title">This game</span> is coming soon!</h1>
+      <p>
+        Our toothy builders are working on this game. Check back later!
+      </p>
+      <button
+        class="button large"
+        style="margin-top: 32px"
+        type="button"
+        data-home
+      >
+        Back to games
+      </button>
+    </main>
+
+    <script>
+      /*
+       * EDIT THE GAME CARDS HERE.
+       * Cavity Catch, Brush Blast, and Smile Match are playable; the other cards open a coming-soon screen.
+       */
+      const games = [
+        {
+          id: "brush-blast",
+          title: "Brush Blast",
+          description: "Brush plaque to uncover food, blast it, and rinse for a shiny smile.",
+          emoji: "🪥",
+          color: "var(--arcade-blue)",
+        },
+        {
+          id: "floss-run",
+          title: "Floss Run",
+          description: "Slide the floss between teeth to collect shiny stars.",
+          emoji: "✨",
+          color: "var(--arcade-green)",
+        },
+        {
+          id: "cavity-catch",
+          title: "Cavity Catch",
+          description: "Catch the wiggly germs and keep every tooth happy.",
+          emoji: "🦠",
+          color: "var(--arcade-yellow)",
+        },
+        {
+          id: "sugar-sort",
+          title: "Sugar Sort",
+          description: "Sort sweet treats into healthy and not-so-healthy piles.",
+          emoji: "🍭",
+          color: "var(--arcade-orange)",
+        },
+        {
+          id: "smile-match",
+          title: "Smile Match",
+          description: "Flip cards and match each dental tool to its twin.",
+          emoji: "🃏",
+          color: "var(--arcade-purple)",
+        },
+        {
+          id: "smile-art",
+          title: "Smile Art",
+          description: "Color and decorate your own happy smile.",
+          emoji: "🎨",
+          color: "var(--arcade-pink)",
+        },
+      ];
+
+      const germTypes = [
+        {
+          label: "green germ",
+          src: "./germ.svg",
+          points: 10,
+          hitPoints: 1,
+          moves: false,
+        },
+        {
+          label: "blue germ",
+          src: "./germ-blue.svg",
+          points: 15,
+          hitPoints: 1,
+          moves: true,
+        },
+        {
+          label: "purple germ",
+          src: "./germ-purple.svg",
+          crackedSrc: "./germ-purple-cracked.svg",
+          points: 20,
+          hitPoints: 2,
+          moves: false,
+        },
+        {
+          label: "gold germ",
+          src: "./germ-gold.svg",
+          points: 50,
+          hitPoints: 1,
+          moves: false,
+        },
+      ];
+
+      function pickGermType() {
+        const roll = Math.random();
+        if (roll < 0.45) return germTypes[0];
+        if (roll < 0.75) return germTypes[1];
+        if (roll < 0.95) return germTypes[2];
+        return germTypes[3];
+      }
+
+      const homeScreen = document.querySelector("#home-screen");
+      const cavityScreen = document.querySelector("#cavity-screen");
+      const blastScreen = document.querySelector("#blast-screen");
+      const matchScreen = document.querySelector("#match-screen");
+      const comingScreen = document.querySelector("#coming-screen");
+      const cavityStart = document.querySelector("#cavity-start");
+      const gameGrid = document.querySelector("#game-grid");
+      const gameStage = document.querySelector("#game-stage");
+      const gameResult = document.querySelector("#game-result");
+      const germKey = document.querySelector("#germ-key");
+      const playStats = document.querySelector("#play-stats");
+      const highScorePill = document.querySelector("#high-score-pill");
+      const headerHighScore = document.querySelector("#header-high-score");
+      const scoreLabel = document.querySelector("#score");
+      const timeLabel = document.querySelector("#time-left");
+      const resultEmoji = document.querySelector("#result-emoji");
+      const resultTitle = document.querySelector("#result-title");
+      const resultScore = document.querySelector("#result-score");
+      const resultMessage = document.querySelector("#result-message");
+      const resultBest = document.querySelector("#result-best");
+      const HIGH_SCORE_KEY = "toothy-town-cavity-catch-high-score";
+
+      let score = 0;
+      let timeLeft = 45;
+      let spawnTimer = null;
+      let countdownTimer = null;
+      let highScoreAtRoundStart = 0;
+
+      function readHighScore() {
+        const parsed = Number.parseInt(
+          window.localStorage.getItem(HIGH_SCORE_KEY) || "0",
+          10,
+        );
+        return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+      }
+
+      function writeHighScore(value) {
+        window.localStorage.setItem(HIGH_SCORE_KEY, String(value));
+      }
+
+      function showHighScorePill() {
+        const highScore = readHighScore();
+        if (highScore > 0) {
+          headerHighScore.textContent = highScore;
+          highScorePill.classList.remove("hidden");
+          return;
+        }
+        highScorePill.classList.add("hidden");
+      }
+
+      function renderCards() {
+        gameGrid.innerHTML = games
+          .map(
+            (game) => `
+              <button class="game-card" type="button" data-game="${game.id}">
+                <span class="game-picture" style="background:${game.color}">
+                  <span>${game.emoji}</span>
+                </span>
+                <h2>${game.title}</h2>
+                <p>${game.description}</p>
+                <span class="play">Play →</span>
+              </button>
+            `,
+          )
+          .join("");
+
+        document.querySelectorAll("[data-game]").forEach((card) => {
+          card.addEventListener("click", () => openGame(card.dataset.game));
+        });
+      }
+
+      function showOnly(screen) {
+        [homeScreen, cavityScreen, blastScreen, matchScreen, comingScreen].forEach((item) => {
+          item.classList.toggle("hidden", item !== screen);
+        });
+        window.scrollTo(0, 0);
+      }
+
+      function openHome() {
+        stopGame();
+        stopBlast();
+        stopMatch();
+        history.replaceState(null, "", window.location.pathname);
+        document.title = "Toothy Town — Dental Games for Kids";
+        showOnly(homeScreen);
+      }
+
+      function openGame(gameId) {
+        const game = games.find((item) => item.id === gameId);
+        if (!game) return;
+
+        history.replaceState(null, "", `#${gameId}`);
+        document.title = `${game.title} — Toothy Town`;
+
+        if (gameId === "cavity-catch") {
+          showOnly(cavityScreen);
+          showReady();
+          return;
+        }
+
+        if (gameId === "brush-blast") {
+          showOnly(blastScreen);
+          showBlastReady();
+          return;
+        }
+
+        if (gameId === "smile-match") {
+          showOnly(matchScreen);
+          showMatchReady();
+          return;
+        }
+
+        document.querySelector("#coming-title").textContent = game.title;
+        showOnly(comingScreen);
+      }
+
+      function playGoldBurst(x, y) {
+        const layer = document.createElement("div");
+        layer.className = "gold-burst-layer";
+        layer.setAttribute("aria-hidden", "true");
+        layer.style.setProperty("--burst-x", `${x}px`);
+        layer.style.setProperty("--burst-y", `${y}px`);
+        layer.innerHTML = `
+          <div class="gold-burst-flash"></div>
+          <div class="gold-burst-glow"></div>
+          <div class="gold-burst-rays"></div>
+          ${[0, 1, 2, 3, 4, 5, 6, 7]
+            .map(
+              (index) =>
+                `<span class="gold-burst-sparkle" style="--sparkle-i:${index}"></span>`,
+            )
+            .join("")}
+          <p class="gold-burst-label">50 Pts!</p>
+        `;
+        document.body.appendChild(layer);
+        window.setTimeout(() => layer.remove(), 1100);
+      }
+
+      function playCatchPop(x, y, points, breaks) {
+        const layer = document.createElement("div");
+        layer.className = "catch-pop-layer";
+        layer.setAttribute("aria-hidden", "true");
+        layer.style.setProperty("--burst-x", `${x}px`);
+        layer.style.setProperty("--burst-y", `${y}px`);
+        const shards = breaks
+          ? [0, 1, 2, 3]
+              .map(
+                (index) =>
+                  `<span class="catch-pop-shard" style="--sparkle-i:${index}"></span>`,
+              )
+              .join("")
+          : "";
+        layer.innerHTML = `
+          ${shards}
+          <p class="catch-pop-label catch-pop-label-${points}">+${points} Pts!</p>
+        `;
+        document.body.appendChild(layer);
+        window.setTimeout(() => layer.remove(), 520);
+      }
+
+      function spawnGerm() {
+        const angle = Math.random() * Math.PI * 2;
+        const radius = Math.sqrt(Math.random());
+        const sizeScale = 0.75 + Math.random() * 0.3;
+        const entranceDelayMs = 50 + Math.random() * 50;
+        const shakeDurationMs = 1050 + Math.random() * 300;
+        const moveX =
+          (24 + Math.random() * 16) * (Math.random() < 0.5 ? -1 : 1);
+        const moveY =
+          (12 + Math.random() * 10) * (Math.random() < 0.5 ? -1 : 1);
+        const moveDurationMs = 1600 + Math.random() * 400;
+        const germType = pickGermType();
+        const germ = document.createElement("button");
+        let hits = 0;
+        germ.type = "button";
+        germ.className = "germ";
+        germ.setAttribute("aria-label", `Whack the ${germType.label}`);
+        germ.style.top = `${49.5 + 5.5 * radius * Math.sin(angle)}%`;
+        germ.style.left = `${50 + 29 * radius * Math.cos(angle)}%`;
+        germ.innerHTML = `<span class="${germType.moves ? "germ-move" : ""}" style="display:inline-block;--germ-scale:${sizeScale};--germ-enter-delay:${entranceDelayMs}ms;--germ-shake-delay:${entranceDelayMs + 500}ms;--germ-shake-duration:${shakeDurationMs}ms;--germ-move-delay:${entranceDelayMs}ms;--germ-move-duration:${moveDurationMs}ms;--germ-move-x:${moveX}px;--germ-move-y:${moveY}px;--germ-move-back-x:${-moveX * 0.75}px;--germ-move-back-y:${-moveY * 0.75}px"><span class="germ-pop"><span class="germ-shake"><img src="${germType.src}" alt="" draggable="false" style="display:block;width:1em;height:1em"></span></span></span>`;
+        germ.addEventListener("click", () => {
+          hits += 1;
+          if (hits < germType.hitPoints) {
+            const germImage = germ.querySelector("img");
+            germImage.src = germType.crackedSrc;
+            germ.setAttribute(
+              "aria-label",
+              `Cracked ${germType.label}; tap once more`,
+            );
+            return;
+          }
+
+          const rect = germ.getBoundingClientRect();
+          const x = rect.left + rect.width / 2;
+          const y = rect.top + rect.height / 2;
+
+          if (germType.label === "gold germ") {
+            playGoldBurst(x, y);
+          } else {
+            playCatchPop(x, y, germType.points, germType.hitPoints > 1);
+          }
+
+          score += germType.points;
+          scoreLabel.textContent = score;
+          germ.remove();
+        });
+        gameStage.appendChild(germ);
+      }
+
+      function showReady() {
+        stopGame();
+        cavityStart.classList.remove("hidden");
+        gameStage.classList.add("hidden");
+        playStats.classList.add("hidden");
+        gameResult.classList.add("hidden");
+        showHighScorePill();
+      }
+
+      function startGame() {
+        stopGame();
+        highScoreAtRoundStart = readHighScore();
+        score = 0;
+        timeLeft = 45;
+        scoreLabel.textContent = score;
+        timeLabel.textContent = timeLeft;
+        cavityStart.classList.add("hidden");
+        gameStage.classList.remove("hidden");
+        playStats.classList.remove("hidden");
+        highScorePill.classList.add("hidden");
+        gameResult.classList.add("hidden");
+        gameStage.querySelector(".mouth").classList.remove("hidden");
+        germKey.classList.remove("hidden");
+
+        const roundStartedAt = Date.now();
+        const scheduleNextGerm = () => {
+          const elapsedSeconds = (Date.now() - roundStartedAt) / 1000;
+          const spawnDelay =
+            elapsedSeconds < 15 ? 1000 : elapsedSeconds < 30 ? 750 : 500;
+
+          spawnTimer = window.setTimeout(() => {
+            spawnGerm();
+            scheduleNextGerm();
+          }, spawnDelay);
+        };
+
+        scheduleNextGerm();
+        countdownTimer = window.setInterval(() => {
+          timeLeft -= 1;
+          timeLabel.textContent = timeLeft;
+          if (timeLeft <= 0) finishGame();
+        }, 1000);
+      }
+
+      function finishGame() {
+        clearTimers();
+        removeGerms();
+        playStats.classList.add("hidden");
+        gameStage.classList.add("hidden");
+
+        const beatHighScore = score > highScoreAtRoundStart;
+        if (beatHighScore) {
+          writeHighScore(score);
+          resultEmoji.textContent = "🏆";
+          resultTitle.textContent = "New high score!";
+          resultScore.textContent = score;
+          resultScore.classList.remove("hidden");
+          resultMessage.textContent = "That's your best catch yet!";
+          resultBest.classList.add("hidden");
+        } else {
+          resultEmoji.textContent = "🎉";
+          resultTitle.textContent = "Great brushing!";
+          resultScore.classList.add("hidden");
+          resultMessage.textContent = "You scored " + score + " points!";
+          if (highScoreAtRoundStart > 0) {
+            resultBest.textContent =
+              "High score to beat: " + highScoreAtRoundStart;
+            resultBest.classList.remove("hidden");
+          } else {
+            resultBest.classList.add("hidden");
+          }
+        }
+
+        gameResult.classList.remove("hidden");
+      }
+
+      function clearTimers() {
+        window.clearTimeout(spawnTimer);
+        window.clearInterval(countdownTimer);
+        spawnTimer = null;
+        countdownTimer = null;
+      }
+
+      function removeGerms() {
+        gameStage.querySelectorAll(".germ").forEach((germ) => germ.remove());
+      }
+
+      function stopGame() {
+        clearTimers();
+        removeGerms();
+      }
+
+      const BLAST_VIEW_W = 400;
+      const BLAST_VIEW_H = 700;
+      const BLAST_TOOTH = { x: 29.53, y: 147, w: 340.94, h: 410 };
+      const BLAST_LEVEL2_SRC = "./brush-blast-level-2.png";
+      const BLAST_LEVEL2_SIZE = 1254;
+      const BLAST_LEVEL2_SLOTS = [
+        [0.36, 0.39],
+        [0.62, 0.39],
+        [0.372, 0.64],
+        [0.604, 0.64],
+      ];
+      let blastLevel = 1;
+      const blastStart = document.querySelector("#blast-start");
+      const blastStage = document.querySelector("#blast-stage");
+      const blastResult = document.querySelector("#blast-result");
+      const blastPlayStats = document.querySelector("#blast-play-stats");
+      const blastLevelLabel = document.querySelector("#blast-level-label");
+      const blastDock = document.querySelector("#blast-dock");
+      const blastBrush = document.querySelector("#blast-brush");
+      const blastBrushImg = document.querySelector("#blast-brush-img");
+      const blastSprayStream = document.querySelector("#blast-spray-stream");
+      const blastDirt = document.querySelector("#blast-dirt");
+      const blastDirtBase = document.querySelector("#blast-dirt-base");
+      const blastFilm = document.querySelector("#blast-film");
+      const blastTreatsEl = document.querySelector("#blast-treats");
+      const blastFound = document.querySelector("#blast-found");
+      const blastMouth = blastStage.querySelector(".mouth");
+      const blastNextLevel = document.querySelector("#blast-next-level");
+      const blastResultArt = blastResult.querySelector("img");
+      const blastFoodKinds = [
+        { label: "corn", src: "./food-corn.svg" },
+        { label: "noodle", src: "./food-noodle.svg" },
+        { label: "gummy", src: "./food-gummy.svg" },
+      ];
+      const blastSlots = [
+        [0.43, 0.3],
+        [0.58, 0.32],
+        [0.5, 0.46],
+      ];
+
+      let blastTool = "brush";
+      let blastScrubFrame = null;
+      let blastScrubbing = false;
+      let blastBrushX = 50;
+      let blastBrushY = 72;
+      let blastLastPoint = null;
+      let blastFinishing = false;
+      let blastDpr = 1;
+      let blastLayout = null;
+      let blastMask = document.createElement("canvas");
+      let blastDirtAmount = document.createElement("canvas");
+      let blastToothImg = null;
+      let blastToothArt = null;
+      let blastPlaquePct = 0;
+      let blastShinePct = 0;
+      const blastTreats = [];
+      const BLAST_LAST_LAYER_CUTOFF = 28;
+      const BLAST_FOOD_REVEAL = 0.68;
+
+      function placeBlastBrush() {
+        blastBrush.style.left = `${blastBrushX}%`;
+        blastBrush.style.top = `${blastBrushY}%`;
+        blastBrush.classList.toggle("tool-cursor-spray", blastTool === "spray");
+        blastBrush.classList.toggle("tool-cursor-rinse", blastTool === "rinse");
+        blastBrush.classList.toggle("tool-rinse-use", blastTool === "rinse" && blastScrubbing);
+        blastBrush.classList.toggle("tool-spray-use", blastTool === "spray" && blastScrubbing);
+        blastSprayStream.classList.toggle("hidden", !(blastTool === "spray" && blastScrubbing));
+        if (blastTool === "brush") {
+          blastBrush.style.width = "48px";
+          blastBrush.style.height = "283px";
+          blastBrush.style.transform = "translate(-50%, 0)";
+          blastBrushImg.src = blastScrubbing
+            ? "./brush-blast-toothbrush-scrub.png"
+            : "./brush-blast-toothbrush-idle.png";
+          return;
+        }
+        blastBrush.style.width = blastTool === "spray" ? "84px" : "72px";
+        blastBrush.style.height = blastTool === "spray" ? "110px" : "72px";
+        blastBrush.style.transform = "";
+        blastBrushImg.src = blastTool === "spray" ? "./tool-sprayer.svg" : "./tool-rinse.svg";
+      }
+
+      function setBlastTool(nextTool) {
+        blastTool = nextTool;
+        blastDock.querySelectorAll("[data-tool]").forEach((button) => {
+          button.classList.toggle("tool-dock-btn-on", button.dataset.tool === nextTool);
+        });
+        placeBlastBrush();
+      }
+
+      function showBlastReady() {
+        stopBlast();
+        blastLevel = 1;
+        applyBlastStageArt();
+        blastStart.classList.remove("hidden");
+        blastStage.classList.add("hidden");
+        blastDock.classList.add("hidden");
+        blastPlayStats.classList.add("hidden");
+        blastResult.classList.add("hidden");
+        blastNextLevel.classList.add("hidden");
+      }
+
+      function blastLayoutFor(width, height) {
+        if (blastLevel === 2) {
+          const scale = Math.min(width / BLAST_LEVEL2_SIZE, height / BLAST_LEVEL2_SIZE);
+          const ox = (width - BLAST_LEVEL2_SIZE * scale) / 2;
+          const oy = (height - BLAST_LEVEL2_SIZE * scale) / 2;
+          return {
+            scale,
+            tooth: {
+              x: ox,
+              y: oy,
+              w: BLAST_LEVEL2_SIZE * scale,
+              h: BLAST_LEVEL2_SIZE * scale,
+            },
+          };
+        }
+        const scale = Math.min(width / BLAST_VIEW_W, height / BLAST_VIEW_H);
+        const ox = (width - BLAST_VIEW_W * scale) / 2;
+        const oy = (height - BLAST_VIEW_H * scale) / 2;
+        return {
+          scale,
+          tooth: {
+            x: ox + BLAST_TOOTH.x * scale,
+            y: oy + BLAST_TOOTH.y * scale,
+            w: BLAST_TOOTH.w * scale,
+            h: BLAST_TOOTH.h * scale,
+          },
+        };
+      }
+
+      function blastTreatLayout(treat) {
+        if (!blastLayout) return null;
+        return {
+          left: blastLayout.tooth.x + treat.nx * blastLayout.tooth.w,
+          top: blastLayout.tooth.y + treat.ny * blastLayout.tooth.h,
+          size: treat.size * blastLayout.tooth.w,
+        };
+      }
+
+      function isWhiteToothPixel(r, g, b, a) {
+        if (a < 80) return false;
+        const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+        const chroma = Math.max(r, g, b) - Math.min(r, g, b);
+        return lum > 165 && chroma < 50;
+      }
+
+      function sampleArtNorm(art, nx, ny) {
+        const x = Math.min(art.width - 1, Math.max(0, Math.round(nx * art.width)));
+        const y = Math.min(art.height - 1, Math.max(0, Math.round(ny * art.height)));
+        const i = (y * art.width + x) * 4;
+        return {
+          r: art.data[i],
+          g: art.data[i + 1],
+          b: art.data[i + 2],
+          a: art.data[i + 3],
+        };
+      }
+
+      function blastFoodPixelAllowedAt(art, nx, ny) {
+        const pixel = sampleArtNorm(art, nx, ny);
+        if (blastLevel === 1) return pixel.a > 80;
+        if (isWhiteToothPixel(pixel.r, pixel.g, pixel.b, pixel.a)) return true;
+        const lum = 0.299 * pixel.r + 0.587 * pixel.g + 0.114 * pixel.b;
+        const chroma = Math.max(pixel.r, pixel.g, pixel.b) - Math.min(pixel.r, pixel.g, pixel.b);
+        if (pixel.a < 40 || lum > 55 || chroma > 40) return false;
+        const left = sampleArtNorm(art, nx - 0.012, ny);
+        const right = sampleArtNorm(art, nx + 0.012, ny);
+        return (
+          isWhiteToothPixel(left.r, left.g, left.b, left.a) &&
+          isWhiteToothPixel(right.r, right.g, right.b, right.a)
+        );
+      }
+
+      function blastTreatSquareFits(nx, ny, size, art) {
+        const cx = nx * art.width;
+        const cy = ny * art.height;
+        const half = (size * art.width) / 2 * 1.06;
+        for (const dx of [-1, -0.5, 0, 0.5, 1]) {
+          for (const dy of [-1, -0.5, 0, 0.5, 1]) {
+            const x = Math.round(cx + dx * half);
+            const y = Math.round(cy + dy * half);
+            if (x < 0 || y < 0 || x >= art.width || y >= art.height) return false;
+            if (!blastFoodPixelAllowedAt(art, x / art.width, y / art.height)) {
+              return false;
+            }
+          }
+        }
+        return true;
+      }
+
+      function constrainBlastTreats() {
+        if (!blastToothArt || !blastTreats.length) return;
+        const canvas = document.createElement("canvas");
+        canvas.width = blastToothArt.naturalWidth;
+        canvas.height = blastToothArt.naturalHeight;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+        ctx.drawImage(blastToothArt, 0, 0);
+        const art = {
+          data: ctx.getImageData(0, 0, canvas.width, canvas.height).data,
+          width: canvas.width,
+          height: canvas.height,
+        };
+        const kept = [];
+        blastTreats.forEach((treat) => {
+          const homeX = treat.nx;
+          const homeY = treat.ny;
+          let nx = treat.nx;
+          let ny = treat.ny;
+          let size = treat.size;
+          let fitted = false;
+          for (let step = 0; step < 48; step += 1) {
+            if (blastTreatSquareFits(nx, ny, size, art)) {
+              treat.nx = nx;
+              treat.ny = ny;
+              treat.size = size;
+              fitted = true;
+              break;
+            }
+            nx += (homeX - nx) * 0.18;
+            ny += (homeY - ny) * 0.18;
+            if (step % 6 === 5) size *= 0.94;
+          }
+          if (!fitted && blastTreatSquareFits(homeX, homeY, treat.size * 0.92, art)) {
+            treat.nx = homeX;
+            treat.ny = homeY;
+            treat.size = treat.size * 0.92;
+            fitted = true;
+          }
+          if (!fitted && blastLevel === 1) {
+            treat.nx = nx;
+            treat.ny = ny;
+            treat.size = size * 0.85;
+            fitted = true;
+          }
+          if (fitted) {
+            kept.push(treat);
+            return;
+          }
+          treat.el.remove();
+        });
+        blastTreats.length = 0;
+        blastTreats.push(...kept);
+        renderBlastTreats();
+      }
+
+      function blastTreatReveal(treat) {
+        if (!blastLayout) return 0;
+        const placed = blastTreatLayout(treat);
+        const dpr = blastDpr;
+        const sampleX = (placed.left - placed.size / 2) * dpr;
+        const sampleY = (placed.top - placed.size / 2) * dpr;
+        const sampleW = placed.size * dpr;
+        const sampleH = placed.size * dpr;
+        return Math.min(
+          sampleBlast(blastDirt, sampleX, sampleY, sampleW, sampleH),
+          sampleBlast(blastDirtBase, sampleX, sampleY, sampleW, sampleH),
+        );
+      }
+
+      function buildBlastTeethMask(source) {
+        const canvas = document.createElement("canvas");
+        canvas.width = source.naturalWidth;
+        canvas.height = source.naturalHeight;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(source, 0, 0);
+        const image = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const { data, width, height } = image;
+        for (let i = 0, p = 0; i < data.length; i += 4, p += 1) {
+          const nx = (p % width) / width;
+          const ny = Math.floor(p / width) / height;
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          const chroma = Math.max(r, g, b) - Math.min(r, g, b);
+          const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+          const inTeeth =
+            ny > 0.3 &&
+            ny < 0.73 &&
+            nx > 0.14 &&
+            nx < 0.86 &&
+            lum > 145 &&
+            chroma < 28;
+          if (!inTeeth) data[i + 3] = 0;
+        }
+        ctx.putImageData(image, 0, 0);
+        return canvas;
+      }
+
+      function paintBlastDirtLayer(ctx, kind) {
+        if (!blastToothImg || !blastLayout) return;
+        const { tooth } = blastLayout;
+        const x = tooth.x * blastDpr;
+        const y = tooth.y * blastDpr;
+        const w = tooth.w * blastDpr;
+        const h = tooth.h * blastDpr;
+        const layer = document.createElement("canvas");
+        layer.width = Math.max(1, Math.round(w));
+        layer.height = Math.max(1, Math.round(h));
+        const g = layer.getContext("2d");
+        g.drawImage(blastToothImg, 0, 0, layer.width, layer.height);
+        g.globalCompositeOperation = "source-in";
+        if (kind === "base") {
+          const stain = g.createLinearGradient(0, 0, layer.width, layer.height);
+          stain.addColorStop(0, "#4a280c");
+          stain.addColorStop(0.4, "#7a4312");
+          stain.addColorStop(1, "#5a320e");
+          g.fillStyle = stain;
+          g.fillRect(0, 0, layer.width, layer.height);
+          g.globalCompositeOperation = "source-atop";
+          for (let i = 0; i < 18; i += 1) {
+            const bx = Math.random() * layer.width;
+            const by = Math.random() * layer.height;
+            const radius = (0.05 + Math.random() * 0.12) * layer.width;
+            const blob = g.createRadialGradient(bx, by, 0, bx, by, radius);
+            blob.addColorStop(0, "rgba(42, 22, 6, 0.82)");
+            blob.addColorStop(1, "rgba(70, 38, 10, 0)");
+            g.fillStyle = blob;
+            g.beginPath();
+            g.arc(bx, by, radius, 0, Math.PI * 2);
+            g.fill();
+          }
+        } else {
+          const stain = g.createLinearGradient(0, 0, layer.width, layer.height);
+          stain.addColorStop(0, "#6b3e16");
+          stain.addColorStop(0.35, "#a56a22");
+          stain.addColorStop(0.7, "#c9a037");
+          stain.addColorStop(1, "#7a4a18");
+          g.fillStyle = stain;
+          g.fillRect(0, 0, layer.width, layer.height);
+          g.globalCompositeOperation = "source-atop";
+          for (let i = 0; i < 28; i += 1) {
+            const bx = Math.random() * layer.width;
+            const by = Math.random() * layer.height;
+            const radius = (0.04 + Math.random() * 0.1) * layer.width;
+            const blob = g.createRadialGradient(bx, by, 0, bx, by, radius);
+            const dark = Math.random() > 0.45;
+            blob.addColorStop(0, dark ? "rgba(58, 30, 8, 0.72)" : "rgba(212, 176, 64, 0.7)");
+            blob.addColorStop(1, "rgba(90, 50, 16, 0)");
+            g.fillStyle = blob;
+            g.beginPath();
+            g.arc(bx, by, radius, 0, Math.PI * 2);
+            g.fill();
+          }
+        }
+        shadePlaqueWithToothLighting(g, blastToothImg, layer.width, layer.height);
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.drawImage(layer, x, y);
+      }
+
+      function shadePlaqueWithToothLighting(g, tooth, w, h) {
+        const light = document.createElement("canvas");
+        light.width = w;
+        light.height = h;
+        const lc = light.getContext("2d");
+        lc.drawImage(tooth, 0, 0, w, h);
+        const image = lc.getImageData(0, 0, w, h);
+        const data = image.data;
+        for (let i = 0; i < data.length; i += 4) {
+          if (data[i + 3] < 80) {
+            data[i] = 255;
+            data[i + 1] = 255;
+            data[i + 2] = 255;
+            data[i + 3] = 0;
+            continue;
+          }
+          const lum = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+          let factor = 1;
+          if (lum >= 40) {
+            const t = Math.min(1, Math.max(0, (lum - 188) / (255 - 188)));
+            const smooth = t * t * (3 - 2 * t);
+            factor = 0.74 + 0.26 * smooth;
+          }
+          const value = Math.round(factor * 255);
+          data[i] = value;
+          data[i + 1] = value;
+          data[i + 2] = value;
+          data[i + 3] = 255;
+        }
+        lc.putImageData(image, 0, 0);
+        g.globalCompositeOperation = "multiply";
+        g.drawImage(light, 0, 0);
+        g.globalCompositeOperation = "source-over";
+      }
+
+      function snapLastLayerOpaque(data) {
+        for (let i = 3; i < data.length; i += 4) {
+          data[i] = data[i] > BLAST_LAST_LAYER_CUTOFF ? 255 : 0;
+        }
+      }
+
+      function copySolidLastLayer(amountCanvas, displayCanvas) {
+        const actx = amountCanvas.getContext("2d", { willReadFrequently: true });
+        const dctx = displayCanvas.getContext("2d", { willReadFrequently: true });
+        const image = actx.getImageData(0, 0, amountCanvas.width, amountCanvas.height);
+        snapLastLayerOpaque(image.data);
+        dctx.putImageData(image, 0, 0);
+      }
+
+      function drawSolidLastLayer(amount, display, cx, cy, radius) {
+        const pad = Math.ceil(radius + 2);
+        const x = Math.max(0, Math.floor(cx - pad));
+        const y = Math.max(0, Math.floor(cy - pad));
+        const w = Math.max(1, Math.min(amount.canvas.width - x, pad * 2));
+        const h = Math.max(1, Math.min(amount.canvas.height - y, pad * 2));
+        if (w < 2 || h < 2) return;
+        const image = amount.getImageData(x, y, w, h);
+        snapLastLayerOpaque(image.data);
+        display.putImageData(image, x, y);
+      }
+
+      function paintBlastFilm() {
+        if (!blastToothImg || !blastLayout) return;
+        const { tooth } = blastLayout;
+        const x = tooth.x * blastDpr;
+        const y = tooth.y * blastDpr;
+        const w = tooth.w * blastDpr;
+        const h = tooth.h * blastDpr;
+        const layer = document.createElement("canvas");
+        layer.width = Math.max(1, Math.round(w));
+        layer.height = Math.max(1, Math.round(h));
+        const g = layer.getContext("2d");
+        g.drawImage(blastToothImg, 0, 0, layer.width, layer.height);
+        g.globalCompositeOperation = "source-in";
+        const wash = g.createLinearGradient(0, 0, layer.width, layer.height);
+        wash.addColorStop(0, "#f6d98a");
+        wash.addColorStop(0.5, "#ead06a");
+        wash.addColorStop(1, "#e4c056");
+        g.fillStyle = wash;
+        g.fillRect(0, 0, layer.width, layer.height);
+        const film = blastFilm.getContext("2d", { willReadFrequently: true });
+        film.clearRect(0, 0, blastFilm.width, blastFilm.height);
+        film.globalAlpha = 0.72;
+        film.drawImage(layer, x, y);
+        film.globalAlpha = 1;
+      }
+
+      function paintBlastDirt() {
+        if (!blastToothImg || !blastLayout) return;
+        const amount = blastDirtAmount.getContext("2d", { willReadFrequently: true });
+        const top = blastDirt.getContext("2d", { willReadFrequently: true });
+        paintBlastDirtLayer(amount, "base");
+        copySolidLastLayer(blastDirtAmount, blastDirtBase);
+        paintBlastDirtLayer(top, "top");
+        paintBlastFilm();
+        const { tooth } = blastLayout;
+        const maskCtx = blastMask.getContext("2d", { willReadFrequently: true });
+        maskCtx.clearRect(0, 0, blastMask.width, blastMask.height);
+        maskCtx.drawImage(
+          blastToothImg,
+          tooth.x * blastDpr,
+          tooth.y * blastDpr,
+          tooth.w * blastDpr,
+          tooth.h * blastDpr,
+        );
+      }
+
+      function sizeBlastCanvas(canvas, pixelW, pixelH, cssW, cssH) {
+        canvas.width = pixelW;
+        canvas.height = pixelH;
+        canvas.style.width = `${cssW}px`;
+        canvas.style.height = `${cssH}px`;
+      }
+
+      function syncBlastCanvas() {
+        const rect = blastStage.getBoundingClientRect();
+        blastDpr = Math.min(2, window.devicePixelRatio || 1);
+        const pixelW = Math.max(1, Math.round(rect.width * blastDpr));
+        const pixelH = Math.max(1, Math.round(rect.height * blastDpr));
+        sizeBlastCanvas(blastDirt, pixelW, pixelH, rect.width, rect.height);
+        sizeBlastCanvas(blastDirtBase, pixelW, pixelH, rect.width, rect.height);
+        sizeBlastCanvas(blastFilm, pixelW, pixelH, rect.width, rect.height);
+        blastDirtAmount.width = pixelW;
+        blastDirtAmount.height = pixelH;
+        blastMask.width = pixelW;
+        blastMask.height = pixelH;
+        blastLayout = blastLayoutFor(rect.width, rect.height);
+        renderBlastTreats();
+      }
+
+      function eraseBlastAt(ctx, x, y, radius, strength) {
+        const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+        gradient.addColorStop(0, `rgba(0, 0, 0, ${strength})`);
+        gradient.addColorStop(0.3, `rgba(0, 0, 0, ${strength * 0.62})`);
+        gradient.addColorStop(0.58, `rgba(0, 0, 0, ${strength * 0.28})`);
+        gradient.addColorStop(0.82, `rgba(0, 0, 0, ${strength * 0.08})`);
+        gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+        ctx.globalCompositeOperation = "destination-out";
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalCompositeOperation = "source-over";
+      }
+
+      function stampBlast(x, y) {
+        const top = blastDirt.getContext("2d", { willReadFrequently: true });
+        const amount = blastDirtAmount.getContext("2d", { willReadFrequently: true });
+        const display = blastDirtBase.getContext("2d", { willReadFrequently: true });
+        const dpr = blastDpr;
+        const px = x * dpr;
+        const py = y * dpr;
+        const radius = 25 * dpr;
+        eraseBlastAt(top, px, py, radius, 0.16);
+        eraseBlastAt(amount, px, py, radius, 0.14);
+        drawSolidLastLayer(amount, display, px, py, radius);
+      }
+
+      function stampBlastRinse(x, y) {
+        const film = blastFilm.getContext("2d", { willReadFrequently: true });
+        const plaque = blastDirtBase.getContext("2d", { willReadFrequently: true });
+        const dpr = blastDpr;
+        const px = Math.max(0, Math.min(blastDirtBase.width - 1, Math.floor(x * dpr)));
+        const py = Math.max(0, Math.min(blastDirtBase.height - 1, Math.floor(y * dpr)));
+        if (plaque.getImageData(px, py, 1, 1).data[3] > 50) return;
+        eraseBlastAt(film, x * dpr, y * dpr, 34 * dpr, 0.2);
+      }
+
+      function stampBlastStroke(x, y) {
+        if (!blastLastPoint) {
+          blastLastPoint = { x, y };
+          return;
+        }
+        const dist = Math.hypot(x - blastLastPoint.x, y - blastLastPoint.y);
+        if (dist < 6) return;
+        const steps = Math.max(1, Math.ceil(dist / 5));
+        for (let i = 1; i <= steps; i += 1) {
+          const t = i / steps;
+          const sx = blastLastPoint.x + (x - blastLastPoint.x) * t;
+          const sy = blastLastPoint.y + (y - blastLastPoint.y) * t;
+          if (blastTool === "brush") stampBlast(sx, sy);
+          if (blastTool === "rinse") stampBlastRinse(sx, sy);
+        }
+        blastLastPoint = { x, y };
+      }
+
+      function sampleBlast(source, x, y, w, h) {
+        const dirt = source.getContext("2d", { willReadFrequently: true });
+        const mask = blastMask.getContext("2d", { willReadFrequently: true });
+        const sx = Math.max(0, Math.floor(x));
+        const sy = Math.max(0, Math.floor(y));
+        const sw = Math.max(1, Math.min(Math.floor(w), source.width - sx));
+        const sh = Math.max(1, Math.min(Math.floor(h), source.height - sy));
+        if (sw < 2 || sh < 2) return 0;
+        const tw = Math.max(8, Math.min(72, Math.round(sw / 6)));
+        const th = Math.max(8, Math.min(88, Math.round(sh / 6)));
+        const scratch = document.createElement("canvas");
+        scratch.width = tw * 2;
+        scratch.height = th;
+        const ctx = scratch.getContext("2d");
+        ctx.drawImage(dirt.canvas, sx, sy, sw, sh, 0, 0, tw, th);
+        ctx.drawImage(mask.canvas, sx, sy, sw, sh, tw, 0, tw, th);
+        const data = ctx.getImageData(0, 0, tw * 2, th).data;
+        let tooth = 0;
+        let dirty = 0;
+        for (let py = 0; py < th; py += 1) {
+          for (let px = 0; px < tw; px += 1) {
+            const maskA = data[(py * tw * 2 + (px + tw)) * 4 + 3];
+            if (maskA < 80) continue;
+            tooth += 1;
+            if (data[(py * tw * 2 + px) * 4 + 3] > 48) dirty += 1;
+          }
+        }
+        return tooth === 0 ? 1 : 1 - dirty / tooth;
+      }
+
+      function sampleBlastShine(x, y, w, h) {
+        const film = blastFilm.getContext("2d", { willReadFrequently: true });
+        const plaque = blastDirtBase.getContext("2d", { willReadFrequently: true });
+        const mask = blastMask.getContext("2d", { willReadFrequently: true });
+        const sx = Math.max(0, Math.floor(x));
+        const sy = Math.max(0, Math.floor(y));
+        const sw = Math.max(1, Math.min(Math.floor(w), blastFilm.width - sx));
+        const sh = Math.max(1, Math.min(Math.floor(h), blastFilm.height - sy));
+        if (sw < 2 || sh < 2) return 0;
+        const tw = Math.max(8, Math.min(72, Math.round(sw / 6)));
+        const th = Math.max(8, Math.min(88, Math.round(sh / 6)));
+        const scratch = document.createElement("canvas");
+        scratch.width = tw * 3;
+        scratch.height = th;
+        const ctx = scratch.getContext("2d");
+        ctx.drawImage(film.canvas, sx, sy, sw, sh, 0, 0, tw, th);
+        ctx.drawImage(plaque.canvas, sx, sy, sw, sh, tw, 0, tw, th);
+        ctx.drawImage(mask.canvas, sx, sy, sw, sh, tw * 2, 0, tw, th);
+        const data = ctx.getImageData(0, 0, tw * 3, th).data;
+        let cleanTooth = 0;
+        let shiny = 0;
+        for (let py = 0; py < th; py += 1) {
+          for (let px = 0; px < tw; px += 1) {
+            if (data[(py * tw * 3 + (px + tw * 2)) * 4 + 3] < 80) continue;
+            if (data[(py * tw * 3 + (px + tw)) * 4 + 3] > 48) continue;
+            cleanTooth += 1;
+            if (data[(py * tw * 3 + px) * 4 + 3] <= 40) shiny += 1;
+          }
+        }
+        return cleanTooth < 8 ? 0 : shiny / cleanTooth;
+      }
+
+      function updateBlastFound() {
+        const found = blastTreats.filter((item) => item.collected).length;
+        const total = blastTreats.length;
+        const plaquePart = Math.round((Math.min(100, blastPlaquePct) / 100) * 33);
+        const foodPart = total <= 0 ? 0 : Math.round((found / total) * 33);
+        const shinePart = Math.round((Math.min(100, blastShinePct) / 100) * 34);
+        const clean = Math.min(100, plaquePart + foodPart + shinePart);
+        blastFound.textContent = "Clean " + clean + "%";
+        blastFound.classList.toggle("clean-chip-done", clean >= 100);
+      }
+
+      function inspectBlast() {
+        if (!blastLayout) return;
+        const dpr = blastDpr;
+        const tooth = blastLayout.tooth;
+        const topClean = sampleBlast(
+          blastDirt,
+          tooth.x * dpr,
+          tooth.y * dpr,
+          tooth.w * dpr,
+          tooth.h * dpr,
+        );
+        const clean = sampleBlast(
+          blastDirtBase,
+          tooth.x * dpr,
+          tooth.y * dpr,
+          tooth.w * dpr,
+          tooth.h * dpr,
+        );
+        blastPlaquePct = Math.round((topClean * 0.45 + clean * 0.55) * 100);
+        blastShinePct = Math.round(
+          sampleBlastShine(tooth.x * dpr, tooth.y * dpr, tooth.w * dpr, tooth.h * dpr) * 100,
+        );
+        blastTreats.forEach((treat) => {
+          if (treat.collected || treat.soaking || treat.popping || treat.exited) return;
+          treat.uncovered = blastTreatReveal(treat) >= BLAST_FOOD_REVEAL ? 1 : 0;
+          if (treat.uncovered) treat.el.classList.add("treat-ready");
+          else treat.el.classList.remove("treat-ready");
+          treat.el.style.zIndex = "2";
+        });
+        updateBlastFound();
+        const foodDone = blastTreats.every((item) => item.exited);
+        if (!blastFinishing && foodDone && blastPlaquePct >= 100 && blastShinePct >= 100) {
+          blastFinishing = true;
+          window.setTimeout(finishBlastGame, 800);
+        }
+      }
+
+      function renderBlastTreats() {
+        if (!blastLayout) return;
+        blastTreats.forEach((treat) => {
+          if (treat.exited) {
+            treat.el.style.display = "none";
+            return;
+          }
+          const placed = blastTreatLayout(treat);
+          treat.el.style.display = "";
+          treat.el.style.left = `${placed.left}px`;
+          treat.el.style.top = `${placed.top}px`;
+          treat.el.style.width = `${placed.size}px`;
+          treat.el.style.height = `${placed.size}px`;
+        });
+      }
+
+      function playScrubPop(x, y) {
+        const layer = document.createElement("div");
+        layer.className = "scrub-pop-layer";
+        layer.setAttribute("aria-hidden", "true");
+        layer.style.setProperty("--burst-x", `${x}px`);
+        layer.style.setProperty("--burst-y", `${y}px`);
+        layer.innerHTML = `<p class="pop-food-label">Pop!</p>`;
+        document.body.appendChild(layer);
+        window.setTimeout(() => layer.remove(), 520);
+      }
+
+      function hideBlastTreat(treat) {
+        if (treat.exited) return;
+        treat.popping = false;
+        treat.exited = true;
+        treat.el.style.display = "none";
+        inspectBlast();
+      }
+
+      function collectBlastTreat(treat, event) {
+        if (treat.collected || treat.soaking || treat.popping || treat.exited) return;
+        if (blastTreatReveal(treat) < BLAST_FOOD_REVEAL) {
+          treat.el.classList.add("food-wiggle");
+          window.setTimeout(() => treat.el.classList.remove("food-wiggle"), 420);
+          return;
+        }
+        if (blastTreats.some((item) => item.soaking || item.popping)) return;
+        treat.soaking = true;
+        treat.el.classList.remove("treat-ready");
+        treat.el.classList.add("food-soaking");
+        treat.el.style.zIndex = "25";
+        window.setTimeout(() => {
+          treat.collected = true;
+          treat.soaking = false;
+          treat.popping = true;
+          treat.el.classList.remove("food-soaking", "treat-ready");
+          treat.el.classList.add("bb-food-popping");
+          treat.el.style.zIndex = "30";
+          playScrubPop(event.clientX, event.clientY);
+          updateBlastFound();
+          const anim = treat.el.animate(
+            [
+              { transform: "translate(-50%, -50%) scale(1) rotate(0deg)", offset: 0 },
+              { transform: "translate(-50%, calc(-50% + 16px)) scale(1.3, 0.64) rotate(-10deg)", offset: 0.12 },
+              { transform: "translate(-50%, calc(-50% - 74px)) scale(1.2) rotate(-16deg)", offset: 0.28 },
+              { transform: "translate(-50%, calc(-50% - 78px)) scale(1.08) rotate(8deg)", offset: 0.34 },
+              { transform: "translate(calc(-50% + 24px), calc(-50% + 520px)) scale(1) rotate(400deg)", offset: 1 },
+            ],
+            { duration: 1500, easing: "linear", fill: "forwards" },
+          );
+          anim.onfinish = () => hideBlastTreat(treat);
+          window.setTimeout(() => hideBlastTreat(treat), 1580);
+        }, 480);
+      }
+
+      function blastTreatAtPoint(x, y) {
+        if (!blastLayout) return null;
+        for (const treat of blastTreats) {
+          if (treat.collected || treat.soaking || treat.popping || treat.exited) continue;
+          const placed = blastTreatLayout(treat);
+          if (Math.hypot(x - placed.left, y - placed.top) <= placed.size / 2 + 16) {
+            return treat;
+          }
+        }
+        return null;
+      }
+
+      function placeBlastTreats() {
+        blastTreatsEl.innerHTML = "";
+        blastTreats.length = 0;
+        const slots = blastLevel === 2 ? BLAST_LEVEL2_SLOTS : blastSlots;
+        const size = blastLevel === 2 ? 0.042 : 0.1;
+        slots.forEach((slot, index) => {
+          const treat = {
+            kind: blastFoodKinds[index % blastFoodKinds.length],
+            nx: slot[0],
+            ny: slot[1],
+            size,
+            uncovered: 0,
+            collected: false,
+            soaking: false,
+            popping: false,
+            exited: false,
+            el: document.createElement("div"),
+          };
+          treat.el.className = "blast-treat";
+          treat.el.style.zIndex = "2";
+          treat.el.style.pointerEvents = "none";
+          treat.el.innerHTML = `<img src="${treat.kind.src}" alt="" draggable="false">`;
+          blastTreatsEl.appendChild(treat.el);
+          blastTreats.push(treat);
+        });
+        renderBlastTreats();
+      }
+
+      function startBlastScrubLoop() {
+        if (blastScrubFrame) return;
+        let lastInspect = 0;
+        const tick = (now) => {
+          if (now - lastInspect > 140) {
+            inspectBlast();
+            lastInspect = now;
+          }
+          blastScrubFrame = window.requestAnimationFrame(tick);
+        };
+        blastScrubFrame = window.requestAnimationFrame(tick);
+      }
+
+      function stopBlastScrubLoop() {
+        if (blastScrubFrame) {
+          window.cancelAnimationFrame(blastScrubFrame);
+          blastScrubFrame = null;
+        }
+      }
+
+      function applyBlastStageArt() {
+        if (blastLevel === 2) {
+          blastMouth.src = BLAST_LEVEL2_SRC;
+          blastMouth.classList.add("level-2-art");
+        } else {
+          blastMouth.src = "./brush-tooth.svg";
+          blastMouth.classList.remove("level-2-art");
+        }
+      }
+
+      function bootBlastArt(done) {
+        const image = new Image();
+        image.src = blastLevel === 2 ? BLAST_LEVEL2_SRC : "./brush-tooth-clean.png";
+        image.onload = () => {
+          blastToothArt = image;
+          blastToothImg = blastLevel === 2 ? buildBlastTeethMask(image) : image;
+          constrainBlastTreats();
+          renderBlastTreats();
+          done();
+        };
+      }
+
+      function startBlastGame() {
+        stopBlast();
+        blastLevel = 1;
+        applyBlastStageArt();
+        blastFinishing = false;
+        blastPlaquePct = 0;
+        blastShinePct = 0;
+        blastLevelLabel.textContent = "1";
+        blastStart.classList.add("hidden");
+        blastStage.classList.remove("hidden");
+        blastDock.classList.remove("hidden");
+        blastPlayStats.classList.remove("hidden");
+        blastResult.classList.add("hidden");
+        blastNextLevel.classList.add("hidden");
+        blastBrushX = 50;
+        blastBrushY = 72;
+        blastScrubbing = false;
+        blastLastPoint = null;
+        setBlastTool("brush");
+        placeBlastTreats();
+        bootBlastArt(() => {
+          syncBlastCanvas();
+          paintBlastDirt();
+          inspectBlast();
+        });
+      }
+
+      function startBlastLevel2() {
+        stopBlastScrubLoop();
+        blastLevel = 2;
+        applyBlastStageArt();
+        blastFinishing = false;
+        blastPlaquePct = 0;
+        blastShinePct = 0;
+        blastLevelLabel.textContent = "2";
+        blastStart.classList.add("hidden");
+        blastStage.classList.remove("hidden");
+        blastDock.classList.remove("hidden");
+        blastPlayStats.classList.remove("hidden");
+        blastResult.classList.add("hidden");
+        blastNextLevel.classList.add("hidden");
+        blastBrushX = 50;
+        blastBrushY = 72;
+        blastScrubbing = false;
+        blastLastPoint = null;
+        setBlastTool("brush");
+        placeBlastTreats();
+        bootBlastArt(() => {
+          syncBlastCanvas();
+          paintBlastDirt();
+          inspectBlast();
+        });
+      }
+
+      function finishBlastGame() {
+        stopBlast();
+        blastPlayStats.classList.add("hidden");
+        blastStage.classList.add("hidden");
+        blastDock.classList.add("hidden");
+        const resultTitle = document.querySelector("#blast-result-title");
+        const resultMessage = document.querySelector("#blast-result-message");
+        if (blastLevel === 2) {
+          blastResultArt.src = BLAST_LEVEL2_SRC;
+          blastResultArt.removeAttribute("width");
+          blastResultArt.classList.remove("finish-tooth-sparkle");
+          blastResultArt.style.width = "220px";
+          blastResultArt.style.height = "auto";
+          blastResultArt.style.objectFit = "contain";
+          blastNextLevel.classList.add("hidden");
+          resultMessage.textContent = "What a pearly white smile!";
+        } else {
+          blastResultArt.src = "./brush-tooth-clean.png";
+          blastResultArt.setAttribute("width", "160");
+          blastResultArt.classList.add("finish-tooth-sparkle");
+          blastResultArt.style.width = "";
+          blastResultArt.style.height = "";
+          blastResultArt.style.objectFit = "";
+          blastNextLevel.classList.remove("hidden");
+          resultMessage.textContent = "That tooth is pearly white. Ready for a whole mouth?";
+        }
+        resultTitle.textContent = "All clean!";
+        blastResult.classList.remove("hidden");
+      }
+
+      function stopBlast() {
+        stopBlastScrubLoop();
+        blastScrubbing = false;
+        blastLastPoint = null;
+        blastTreats.forEach((treat) => treat.el.remove());
+        blastTreats.length = 0;
+      }
+
+      function moveBlastBrush(event) {
+        const rect = blastStage.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        blastBrushX = Math.min(96, Math.max(4, (x / rect.width) * 100));
+        blastBrushY = Math.min(96, Math.max(6, (y / rect.height) * 100));
+        placeBlastBrush();
+        const food = blastTreatAtPoint(x, y);
+        if (blastTool === "brush") {
+          stampBlastStroke(x, y);
+          if (food) {
+            food.el.classList.add("food-wiggle");
+            window.setTimeout(() => food.el.classList.remove("food-wiggle"), 420);
+          }
+          return;
+        }
+        if (blastTool === "spray") {
+          if (food) collectBlastTreat(food, event);
+          blastLastPoint = { x, y };
+          return;
+        }
+        stampBlastStroke(x, y);
+        if (food) {
+          food.el.classList.add("food-wiggle");
+          window.setTimeout(() => food.el.classList.remove("food-wiggle"), 420);
+        }
+      }
+
+      blastStage.addEventListener("pointerdown", (event) => {
+        event.preventDefault();
+        blastStage.setPointerCapture(event.pointerId);
+        blastScrubbing = true;
+        blastLastPoint = null;
+        moveBlastBrush(event);
+        startBlastScrubLoop();
+      });
+      blastStage.addEventListener("pointermove", (event) => {
+        if (!blastScrubbing) return;
+        if (event.pointerType === "mouse" && event.buttons === 0) return;
+        moveBlastBrush(event);
+      });
+      function endBlastPointer(event) {
+        if (blastStage.hasPointerCapture(event.pointerId)) {
+          blastStage.releasePointerCapture(event.pointerId);
+        }
+        blastScrubbing = false;
+        blastLastPoint = null;
+        placeBlastBrush();
+        stopBlastScrubLoop();
+        inspectBlast();
+      }
+      blastStage.addEventListener("pointerup", endBlastPointer);
+      blastStage.addEventListener("pointercancel", endBlastPointer);
+      blastStage.addEventListener("contextmenu", (event) => event.preventDefault());
+      blastDock.querySelectorAll("[data-tool]").forEach((button) => {
+        button.addEventListener("pointerdown", (event) => {
+          event.stopPropagation();
+          setBlastTool(button.dataset.tool);
+        });
+      });
+
+      const MATCH_ITEMS = [
+        { id: "toothbrush", name: "Toothbrush", src: "./match-toothbrush.png" },
+        { id: "floss", name: "Floss", src: "./match-floss.png" },
+        { id: "toothpaste", name: "Toothpaste", src: "./match-toothpaste.png" },
+        { id: "mirror", name: "Mirror", src: "./match-mirror.png" },
+        { id: "cup", name: "Cup", src: "./match-cup.png" },
+        { id: "tooth", name: "Tooth", src: "./match-tooth.png" },
+      ];
+      const matchStart = document.querySelector("#match-start");
+      const matchStage = document.querySelector("#match-stage");
+      const matchResult = document.querySelector("#match-result");
+      const matchPlayStats = document.querySelector("#match-play-stats");
+      const matchPairsLabel = document.querySelector("#match-pairs");
+      const matchMovesLabel = document.querySelector("#match-moves");
+      const matchResultMessage = document.querySelector("#match-result-message");
+      let matchCards = [];
+      let matchMoves = 0;
+      let matchLocked = false;
+      let matchFlipTimer = null;
+
+      function stopMatch() {
+        if (matchFlipTimer) window.clearTimeout(matchFlipTimer);
+        matchFlipTimer = null;
+        matchLocked = false;
+        matchCards = [];
+      }
+
+      function showMatchReady() {
+        stopMatch();
+        matchStart.classList.remove("hidden");
+        matchStage.classList.add("hidden");
+        matchResult.classList.add("hidden");
+        matchPlayStats.classList.add("hidden");
+      }
+
+      function shuffleMatchCards() {
+        const deck = MATCH_ITEMS.flatMap((item) => [
+          { uid: `${item.id}-a`, itemId: item.id, faceUp: false, matched: false },
+          { uid: `${item.id}-b`, itemId: item.id, faceUp: false, matched: false },
+        ]);
+        for (let index = deck.length - 1; index > 0; index -= 1) {
+          const swap = Math.floor(Math.random() * (index + 1));
+          const current = deck[index];
+          deck[index] = deck[swap];
+          deck[swap] = current;
+        }
+        return deck;
+      }
+
+      function matchItem(itemId) {
+        return MATCH_ITEMS.find((item) => item.id === itemId);
+      }
+
+      function matchPairCount() {
+        return matchCards.filter((card) => card.matched).length / 2;
+      }
+
+      function renderMatchStats() {
+        matchPairsLabel.textContent = String(matchPairCount());
+        matchMovesLabel.textContent = String(matchMoves);
+      }
+
+      function renderMatchBoard() {
+        matchStage.innerHTML = matchCards
+          .map((card) => {
+            const item = matchItem(card.itemId);
+            const open = card.faceUp || card.matched;
+            return `
+              <button class="match-card${open ? " is-up" : ""}${card.matched ? " is-matched" : ""}" type="button" data-uid="${card.uid}" aria-label="${open ? item.name : "Face-down card"}">
+                <span class="match-card-inner">
+                  <span class="match-card-back" aria-hidden="true"><img src="./smile-arcade-logo.png" alt="" draggable="false" /></span>
+                  <span class="match-card-face">
+                    <img src="${item.src}" alt="" draggable="false" />
+                    <span class="match-card-name">${item.name}</span>
+                  </span>
+                </span>
+              </button>
+            `;
+          })
+          .join("");
+        matchStage.querySelectorAll("[data-uid]").forEach((button) => {
+          button.addEventListener("click", () => tapMatchCard(button.dataset.uid));
+        });
+      }
+
+      function finishMatch() {
+        matchStage.classList.add("hidden");
+        matchPlayStats.classList.add("hidden");
+        matchResult.classList.remove("hidden");
+        matchResultMessage.textContent = `You found every pair in ${matchMoves} ${matchMoves === 1 ? "move" : "moves"}.`;
+      }
+
+      function tapMatchCard(uid) {
+        if (matchLocked) return;
+        const tapped = matchCards.find((card) => card.uid === uid);
+        if (!tapped || tapped.faceUp || tapped.matched) return;
+        const openUnmatched = matchCards.filter((card) => card.faceUp && !card.matched);
+        if (openUnmatched.length >= 2) return;
+        tapped.faceUp = true;
+        const showing = matchCards.filter((card) => card.faceUp && !card.matched);
+        renderMatchBoard();
+        if (showing.length < 2) return;
+        matchMoves += 1;
+        renderMatchStats();
+        if (showing[0].itemId === showing[1].itemId) {
+          matchCards.forEach((card) => {
+            if (card.itemId === showing[0].itemId) card.matched = true;
+          });
+          renderMatchBoard();
+          renderMatchStats();
+          if (matchCards.every((card) => card.matched)) {
+            matchLocked = true;
+            matchFlipTimer = window.setTimeout(() => {
+              matchLocked = false;
+              finishMatch();
+            }, 650);
+          }
+          return;
+        }
+        matchLocked = true;
+        matchFlipTimer = window.setTimeout(() => {
+          matchCards.forEach((card) => {
+            if (!card.matched) card.faceUp = false;
+          });
+          matchLocked = false;
+          renderMatchBoard();
+        }, 850);
+      }
+
+      function startMatchGame() {
+        stopMatch();
+        matchCards = shuffleMatchCards();
+        matchMoves = 0;
+        matchStart.classList.add("hidden");
+        matchResult.classList.add("hidden");
+        matchStage.classList.remove("hidden");
+        matchPlayStats.classList.remove("hidden");
+        renderMatchStats();
+        renderMatchBoard();
+      }
+
+      document.querySelector("#blast-start-play").addEventListener("click", startBlastGame);
+      document.querySelector("#blast-play-again").addEventListener("click", startBlastGame);
+      blastNextLevel.addEventListener("click", startBlastLevel2);
+
+      document.querySelectorAll("[data-home]").forEach((button) => {
+        button.addEventListener("click", openHome);
+      });
+      document.querySelector("#start-play").addEventListener("click", startGame);
+      document.querySelector("#play-again").addEventListener("click", startGame);
+      document.querySelector("#match-start-play").addEventListener("click", startMatchGame);
+      document.querySelector("#match-play-again").addEventListener("click", startMatchGame);
+
+      renderCards();
+
+      const initialGame = window.location.hash.slice(1);
+      if (games.some((game) => game.id === initialGame)) {
+        openGame(initialGame);
+      }
+    </script>
+  </body>
+</html>
