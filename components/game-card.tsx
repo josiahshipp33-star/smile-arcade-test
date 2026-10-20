@@ -19,12 +19,11 @@ export function GameCard({ game }: { game: Game }) {
       <p className="mt-1 text-xs font-medium text-muted-foreground sm:text-sm">
         {game.description}
       </p>
-      <div className="mt-4 inline-flex items-center text-sm font-bold text-primary">
-        Play
-        <span className="ml-1 transition-transform group-hover:translate-x-1">
-          →
+      <span className="mt-auto flex justify-center pt-3 sm:pt-4">
+        <span className="inline-flex items-center rounded-full bg-primary px-4 py-1.5 text-xs font-bold text-primary-foreground sm:px-5 sm:py-2 sm:text-sm">
+          Play
         </span>
-      </div>
+      </span>
     </Link>
   )
 }

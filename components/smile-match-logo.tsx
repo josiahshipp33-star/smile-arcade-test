@@ -4,13 +4,13 @@ export function SmileMatchLogo() {
   return (
     <h1 className="flex select-none flex-col items-center">
       <Image
-        src="/match-tooth.png"
+        src="/smile-match-mark.svg"
         alt=""
-        width={72}
-        height={72}
+        width={140}
+        height={120}
         unoptimized
         draggable={false}
-        className="mb-3 size-[4.5rem] object-contain"
+        className="mb-3 h-[5.25rem] w-auto object-contain"
       />
       <span className="font-[family-name:var(--font-fredoka)] text-[2.35rem] leading-none font-bold tracking-tight text-foreground sm:text-5xl">
         Smile

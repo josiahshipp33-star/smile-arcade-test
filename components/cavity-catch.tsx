@@ -22,7 +22,8 @@ type GermType = {
   howTo: string
 }
 
-const HIGH_SCORE_KEY = "toothy-town-cavity-catch-high-score"
+const HIGH_SCORE_KEY = "smile-arcade-cavity-catch-high-score"
+const LEGACY_HIGH_SCORE_KEY = "toothy-town-cavity-catch-high-score"
 
 const GREEN_GERM: GermType = {
   label: "green germ",
@@ -109,10 +110,10 @@ type CatchPop = {
 
 function readHighScore() {
   if (typeof window === "undefined") return 0
-  const parsed = Number.parseInt(
-    window.localStorage.getItem(HIGH_SCORE_KEY) ?? "0",
-    10,
-  )
+  const stored =
+    window.localStorage.getItem(HIGH_SCORE_KEY) ??
+    window.localStorage.getItem(LEGACY_HIGH_SCORE_KEY)
+  const parsed = Number.parseInt(stored ?? "0", 10)
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 0
 }
 
@@ -513,7 +514,7 @@ export function CavityCatch() {
           Time: {timeLeft}s
         </div>
       </GameHeader>
-      <main className="relative mx-auto w-full max-w-[430px] flex-1 overflow-hidden bg-[#fdceb2]">
+      <main className="relative mx-auto w-full max-w-[430px] flex-1 select-none overflow-hidden bg-[#fdceb2]">
         <MouthBackdrop />
         <GermKey compact />
         {germs.map((germ) => (
@@ -521,7 +522,9 @@ export function CavityCatch() {
             key={germ.id}
             type="button"
             onClick={(event) => catchGerm(germ, event)}
-            className="absolute -translate-x-1/2 -translate-y-1/2 text-5xl transition-transform hover:scale-125 active:scale-90 sm:text-6xl"
+            onContextMenu={(event) => event.preventDefault()}
+            onDragStart={(event) => event.preventDefault()}
+            className="absolute -translate-x-1/2 -translate-y-1/2 select-none text-5xl transition-transform hover:scale-125 active:scale-90 sm:text-6xl"
             style={{ top: `${germ.top}%`, left: `${germ.left}%` }}
             aria-label={`Whack the ${germ.germType.label}`}
           >
@@ -558,7 +561,7 @@ export function CavityCatch() {
                     width={64}
                     height={64}
                     draggable={false}
-                    className="h-[1em] w-[1em]"
+                    className="pointer-events-none h-[1em] w-[1em] select-none"
                   />
                 </span>
               </span>

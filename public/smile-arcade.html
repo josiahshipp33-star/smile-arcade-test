@@ -8,10 +8,10 @@
       content="Interactive dental-themed waiting room games for kids."
     />
     <meta name="theme-color" content="#f7f9f4" />
-    <title>Toothy Town — Dental Games for Kids</title>
+    <title>Smile Arcade - Dental Games for Kids</title>
     <style>
       /*
-       * TOOTHY TOWN — STANDALONE EDITION
+       * SMILE ARCADE — STANDALONE EDITION
        * Everything needed to edit and run the app is in this one HTML file.
        * Change the colors below, edit the game list near the bottom, and
        * double-click this file to view your changes in a browser.
@@ -46,6 +46,10 @@
 
       html {
         scroll-behavior: smooth;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+        -webkit-tap-highlight-color: transparent;
       }
 
       body {
@@ -57,6 +61,24 @@
         font-family:
           ui-rounded, "Arial Rounded MT Bold", system-ui, -apple-system,
           BlinkMacSystemFont, "Segoe UI", sans-serif;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      img,
+      svg,
+      canvas,
+      video {
+        -webkit-user-drag: none;
+        user-drag: none;
+        -webkit-touch-callout: none;
+        pointer-events: none;
+      }
+
+      ::selection {
+        background: transparent;
       }
 
       button,
@@ -328,7 +350,7 @@
 
       .game-card p {
         min-height: 40px;
-        margin: 4px 0 0;
+        margin: 4px 0 12px;
         color: var(--muted-foreground);
         font-size: 14px;
         font-weight: 600;
@@ -336,9 +358,16 @@
       }
 
       .play {
-        margin-top: 16px;
-        color: var(--primary-dark);
-        font-size: 14px;
+        display: inline-flex;
+        margin-top: auto;
+        align-items: center;
+        justify-content: center;
+        align-self: center;
+        padding: 6px 18px;
+        border-radius: 999px;
+        color: white;
+        background: var(--primary);
+        font-size: 13px;
         font-weight: 800;
       }
 
@@ -355,6 +384,9 @@
         display: flex;
         min-height: 100vh;
         flex-direction: column;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
       }
 
       .game-header {
@@ -755,6 +787,14 @@
         object-fit: contain;
       }
 
+      .match-logo-mark {
+        display: block;
+        width: auto;
+        height: 84px;
+        margin-bottom: 12px;
+        object-fit: contain;
+      }
+
       .cavity-logo-cavity {
         font-size: clamp(36px, 7vw, 48px);
         font-weight: 800;
@@ -942,12 +982,17 @@
         overflow: hidden;
         background: #fdceb2;
         flex: 1;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
       }
 
       .blast-stage {
         background: #d7f3e6;
         touch-action: none;
+        -webkit-user-select: none;
         user-select: none;
+        -webkit-touch-callout: none;
         min-height: calc(100vh - 170px);
       }
 
@@ -1257,6 +1302,15 @@
         cursor: pointer;
         font-size: clamp(48px, 8vw, 64px);
         transform: translate(-50%, -50%);
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+      }
+
+      .germ img {
+        pointer-events: none;
+        -webkit-user-drag: none;
+        user-drag: none;
       }
 
       .germ-pop {
@@ -1515,6 +1569,9 @@
         background: transparent;
         perspective: 800px;
         cursor: pointer;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
       }
 
       .match-card-inner {
@@ -1713,7 +1770,7 @@
       </section>
 
       <footer class="footer">
-        Toothy Town · Made for tiny patients · Ask a grown-up if you need help
+        Smile Arcade · Made for tiny patients · Ask a grown-up if you need help
       </footer>
     </main>
 
@@ -1744,7 +1801,10 @@
           Play
         </button>
         <div class="how-to">
-          <img class="how-to-toothy" src="./toothy-grin.png" alt="" />
+          <span class="how-to-toothy how-to-toothy-wink">
+            <img class="how-to-toothy-open" src="./toothy-grin.png" alt="" />
+            <img class="how-to-toothy-shut" src="./toothy-wink.png" alt="" />
+          </span>
           <h2>How to play</h2>
           <p>
             Tap the germs on the teeth before time runs out. You have 45
@@ -1965,7 +2025,7 @@
       </header>
       <section class="start-screen" id="match-start">
         <h1 class="cavity-logo">
-          <img class="cavity-logo-mark" src="./match-tooth.png" alt="" />
+          <img class="match-logo-mark" src="./smile-match-mark.svg" alt="" />
           <span class="cavity-logo-cavity">Smile</span>
           <span class="cavity-logo-catch">Match</span>
         </h1>
@@ -1973,7 +2033,10 @@
           Play
         </button>
         <div class="how-to">
-          <img class="how-to-toothy" src="./toothy-smile.png" alt="" />
+          <span class="how-to-toothy how-to-toothy-wink">
+            <img class="how-to-toothy-open" src="./toothy-smile.png" alt="" />
+            <img class="how-to-toothy-shut" src="./toothy-wink.png" alt="" />
+          </span>
           <h2>How to play</h2>
           <p>
             Flip two cards. Find the matching pair of each dental tool. Match
@@ -2131,7 +2194,8 @@
       const resultScore = document.querySelector("#result-score");
       const resultMessage = document.querySelector("#result-message");
       const resultBest = document.querySelector("#result-best");
-      const HIGH_SCORE_KEY = "toothy-town-cavity-catch-high-score";
+      const HIGH_SCORE_KEY = "smile-arcade-cavity-catch-high-score";
+      const LEGACY_HIGH_SCORE_KEY = "toothy-town-cavity-catch-high-score";
 
       let score = 0;
       let timeLeft = 45;
@@ -2140,10 +2204,10 @@
       let highScoreAtRoundStart = 0;
 
       function readHighScore() {
-        const parsed = Number.parseInt(
-          window.localStorage.getItem(HIGH_SCORE_KEY) || "0",
-          10,
-        );
+        const stored =
+          window.localStorage.getItem(HIGH_SCORE_KEY) ||
+          window.localStorage.getItem(LEGACY_HIGH_SCORE_KEY);
+        const parsed = Number.parseInt(stored || "0", 10);
         return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
       }
 
@@ -2171,7 +2235,7 @@
                 </span>
                 <h2>${game.title}</h2>
                 <p>${game.description}</p>
-                <span class="play">Play →</span>
+                <span class="play">Play</span>
               </button>
             `,
           )
@@ -2194,7 +2258,7 @@
         stopBlast();
         stopMatch();
         history.replaceState(null, "", window.location.pathname);
-        document.title = "Toothy Town — Dental Games for Kids";
+        document.title = "Smile Arcade - Dental Games for Kids";
         showOnly(homeScreen);
       }
 
@@ -2203,7 +2267,7 @@
         if (!game) return;
 
         history.replaceState(null, "", `#${gameId}`);
-        document.title = `${game.title} — Toothy Town`;
+        document.title = `${game.title} - Smile Arcade`;
 
         if (gameId === "cavity-catch") {
           showOnly(cavityScreen);
@@ -2290,7 +2354,9 @@
         germ.setAttribute("aria-label", `Whack the ${germType.label}`);
         germ.style.top = `${49.5 + 5.5 * radius * Math.sin(angle)}%`;
         germ.style.left = `${50 + 29 * radius * Math.cos(angle)}%`;
-        germ.innerHTML = `<span class="${germType.moves ? "germ-move" : ""}" style="display:inline-block;--germ-scale:${sizeScale};--germ-enter-delay:${entranceDelayMs}ms;--germ-shake-delay:${entranceDelayMs + 500}ms;--germ-shake-duration:${shakeDurationMs}ms;--germ-move-delay:${entranceDelayMs}ms;--germ-move-duration:${moveDurationMs}ms;--germ-move-x:${moveX}px;--germ-move-y:${moveY}px;--germ-move-back-x:${-moveX * 0.75}px;--germ-move-back-y:${-moveY * 0.75}px"><span class="germ-pop"><span class="germ-shake"><img src="${germType.src}" alt="" draggable="false" style="display:block;width:1em;height:1em"></span></span></span>`;
+        germ.innerHTML = `<span class="${germType.moves ? "germ-move" : ""}" style="display:inline-block;--germ-scale:${sizeScale};--germ-enter-delay:${entranceDelayMs}ms;--germ-shake-delay:${entranceDelayMs + 500}ms;--germ-shake-duration:${shakeDurationMs}ms;--germ-move-delay:${entranceDelayMs}ms;--germ-move-duration:${moveDurationMs}ms;--germ-move-x:${moveX}px;--germ-move-y:${moveY}px;--germ-move-back-x:${-moveX * 0.75}px;--germ-move-back-y:${-moveY * 0.75}px"><span class="germ-pop"><span class="germ-shake"><img src="${germType.src}" alt="" draggable="false" style="display:block;width:1em;height:1em;pointer-events:none;-webkit-user-drag:none"></span></span></span>`;
+        germ.addEventListener("contextmenu", (event) => event.preventDefault());
+        germ.addEventListener("dragstart", (event) => event.preventDefault());
         germ.addEventListener("click", () => {
           hits += 1;
           if (hits < germType.hitPoints) {
@@ -3435,7 +3501,7 @@
             return `
               <button class="match-card${open ? " is-up" : ""}${card.matched ? " is-matched" : ""}" type="button" data-uid="${card.uid}" aria-label="${open ? item.name : "Face-down card"}">
                 <span class="match-card-inner">
-                  <span class="match-card-back" aria-hidden="true"><img src="./smile-arcade-logo.png" alt="" draggable="false" /></span>
+                  <span class="match-card-back" aria-hidden="true"><img src="./smile-match-mark.svg" alt="" draggable="false" /></span>
                   <span class="match-card-face">
                     <img src="${item.src}" alt="" draggable="false" />
                     <span class="match-card-name">${item.name}</span>
@@ -3447,6 +3513,8 @@
           .join("");
         matchStage.querySelectorAll("[data-uid]").forEach((button) => {
           button.addEventListener("click", () => tapMatchCard(button.dataset.uid));
+          button.addEventListener("contextmenu", (event) => event.preventDefault());
+          button.addEventListener("dragstart", (event) => event.preventDefault());
         });
       }
 
@@ -3517,6 +3585,9 @@
       document.querySelector("#play-again").addEventListener("click", startGame);
       document.querySelector("#match-start-play").addEventListener("click", startMatchGame);
       document.querySelector("#match-play-again").addEventListener("click", startMatchGame);
+
+      document.addEventListener("selectstart", (event) => event.preventDefault());
+      document.addEventListener("dragstart", (event) => event.preventDefault());
 
       renderCards();
 

@@ -187,7 +187,8 @@ export function SmileMatch() {
                     width={36}
                     height={36}
                     unoptimized
-                    className="size-9 object-contain"
+                    draggable={false}
+                    className="pointer-events-none size-9 select-none object-contain"
                   />
                   <span className="text-sm font-bold text-foreground">
                     {item.name}
@@ -229,7 +230,7 @@ export function SmileMatch() {
           Moves {moves}
         </div>
       </GameHeader>
-      <main className="mx-auto grid w-full max-w-[430px] flex-1 grid-cols-3 content-center gap-2.5 px-4 py-5">
+      <main className="mx-auto grid w-full max-w-[430px] flex-1 select-none grid-cols-3 content-center gap-2.5 px-4 py-5">
         {cards.map((card) => {
           const item = itemById(card.itemId)
           const open = card.faceUp || card.matched
@@ -238,6 +239,8 @@ export function SmileMatch() {
               key={card.uid}
               type="button"
               onClick={() => tapCard(card.uid)}
+              onContextMenu={(event) => event.preventDefault()}
+              onDragStart={(event) => event.preventDefault()}
               aria-label={
                 open ? item.name : "Face-down card"
               }
@@ -248,13 +251,13 @@ export function SmileMatch() {
               <span className="match-card-inner">
                 <span className="match-card-back" aria-hidden="true">
                   <Image
-                    src="/smile-arcade-logo.png"
+                    src="/smile-match-mark.svg"
                     alt=""
-                    width={1296}
-                    height={789}
+                    width={140}
+                    height={120}
                     unoptimized
                     draggable={false}
-                    className="h-[86%] w-[86%] object-contain"
+                    className="h-[78%] w-[78%] object-contain"
                   />
                 </span>
                 <span className="match-card-face">

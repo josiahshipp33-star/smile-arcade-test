@@ -23,21 +23,21 @@ const fredoka = Fredoka({
 
 export const metadata: Metadata = {
   title: {
-    default: "Toothy Town — Dental Games for Kids",
-    template: "%s — Toothy Town",
+    default: "Smile Arcade - Dental Games for Kids",
+    template: "%s - Smile Arcade",
   },
   description:
     "Play fun dental-themed games while you wait. Designed for kids in the dentist's waiting room.",
-  authors: [{ name: "Toothy Town" }],
+  authors: [{ name: "Smile Arcade" }],
   openGraph: {
-    title: "Toothy Town — Dental Games for Kids",
+    title: "Smile Arcade - Dental Games for Kids",
     description:
       "Play fun dental-themed games while you wait. Designed for kids in the dentist's waiting room.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Toothy Town — Dental Games for Kids",
+    title: "Smile Arcade - Dental Games for Kids",
     description:
       "Play fun dental-themed games while you wait. Designed for kids in the dentist's waiting room.",
   },

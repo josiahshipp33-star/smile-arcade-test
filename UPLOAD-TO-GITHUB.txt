@@ -1,0 +1,50 @@
+SMILE ARCADE — UPLOAD TO GITHUB
+================================
+
+This folder is ready to host on GitHub Pages. Do not upload node_modules
+or .next. Those are not in this download.
+
+GitHub needs a workflows folder named:
+
+    .github/workflows/pages.yml
+
+Folders that start with a dot are hidden on Mac and Windows, so this
+download also includes a VISIBLE copy:
+
+    github/workflows/pages.yml
+
+BEFORE YOU UPLOAD
+-----------------
+1. If you can see a folder named ".github", you are done with this step.
+   You can delete the extra "github" folder.
+
+2. If you only see a folder named "github" (no dot), rename it to
+   ".github" — add a period at the start of the name.
+   On Mac Finder you can also press Cmd+Shift+. to show hidden folders.
+
+CREATE THE REPO
+---------------
+3. On GitHub, click New repository.
+4. Name it something like smile-arcade.
+5. Leave it empty: do not add a README, .gitignore, or license.
+6. Create the repository.
+
+UPLOAD THE FILES
+----------------
+7. On the empty repo page, click "uploading an existing file"
+   (or Add file → Upload files).
+8. Drag in EVERY file and folder from this unzipped Smile Arcade folder,
+   including .github (the renamed one).
+9. Click Commit changes.
+
+TURN ON GITHUB PAGES
+--------------------
+10. Open Settings → Pages.
+11. Under Build and deployment, set Source to GitHub Actions.
+12. Open the Actions tab and wait for "Deploy to GitHub Pages" to finish.
+13. Play the games at:
+
+    https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO_NAME/
+
+The workflow sets the base path to /YOUR_REPO_NAME automatically so
+images, game links, and the Back button work on GitHub Pages.

@@ -22,9 +22,9 @@ export async function generateMetadata({
 
   return {
     title,
-    description: `Play ${title} on Toothy Town.`,
+    description: `Play ${title} on Smile Arcade.`,
     openGraph: {
-      title: `${title} — Toothy Town`,
+      title: `${title} - Smile Arcade`,
     },
   }
 }

@@ -9,6 +9,7 @@ import { BrushBlastLogo } from "@/components/brush-blast-logo"
 import { HowToToothyWink } from "@/components/how-to-toothy"
 import { ToothBackdrop } from "@/components/tooth-backdrop"
 import { Button } from "@/components/ui/button"
+import { withBasePath } from "@/lib/base-path"
 import { useGameplayScrollLock } from "@/lib/use-gameplay-scroll-lock"
 
 const BRUSH_WIDTH = 48
@@ -1028,8 +1029,10 @@ export function BrushBlast() {
   useEffect(() => {
     if (phase !== "playing") return
     const image = new window.Image()
-    image.src = level === 2 ? LEVEL2_ART_SRC : "/brush-tooth-clean.png"
-    image.onload = () => {
+    let applied = false
+    const onToothArtReady = () => {
+      if (applied) return
+      applied = true
       toothArtRef.current = image
       toothImageRef.current = level === 2 ? buildTeethMask(image) : image
       syncCanvas()
@@ -1043,6 +1046,9 @@ export function BrushBlast() {
       setDirtReady(true)
       inspectProgress()
     }
+    image.onload = onToothArtReady
+    image.src = withBasePath(level === 2 ? LEVEL2_ART_SRC : "/brush-tooth-clean.png")
+    if (image.complete && image.naturalWidth > 0) onToothArtReady()
     const onResize = () => {
       const snapshotOf = (canvas: HTMLCanvasElement | null) => {
         if (!canvas || !canvas.width) return null
@@ -1082,7 +1088,10 @@ export function BrushBlast() {
       }
     }
     window.addEventListener("resize", onResize)
-    return () => window.removeEventListener("resize", onResize)
+    return () => {
+      applied = true
+      window.removeEventListener("resize", onResize)
+    }
   }, [phase, level, inspectProgress, paintRoundDirt, syncCanvas])
 
   useEffect(() => {
@@ -1556,7 +1565,7 @@ export function BrushBlast() {
           )}
         </div>
       </main>
-      <div className="mx-auto flex w-full max-w-[430px] justify-center gap-3 bg-[#c7ead9] px-3 py-3">
+      <div className="mx-auto flex w-full max-w-[430px] select-none justify-center gap-3 bg-[#c7ead9] px-3 py-3">
         {TOOLS.map((item) => {
           const selected = tool === item.id
           return (

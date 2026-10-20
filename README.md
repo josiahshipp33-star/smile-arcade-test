@@ -1,8 +1,8 @@
-# Toothy Town
+# Smile Arcade
 
 Interactive dental games for kids waiting at the dentist. Tap a game card, play Cavity Catch or Brush Blast, and keep every tooth happy.
 
-This is a recreation of the original Toothy Town hub, ready to keep building here.
+This is the Smile Arcade hub, with Toothy the mascot ready to cheer you on.
 
 ## Play now
 
@@ -15,17 +15,17 @@ Open [http://localhost:43147](http://localhost:43147).
 
 ## Single-file version
 
-`public/toothy-town.html` contains the complete hub, Cavity Catch, Brush
+`public/smile-arcade.html` contains the complete hub, Cavity Catch, Brush
 Blast, and Smile Match in one editable file. Its styling and JavaScript are included directly
 in the HTML, so you can double-click it to open it in a browser without
 installing anything.
 
 While the development server is running, view it at
-[http://localhost:43147/toothy-town.html](http://localhost:43147/toothy-town.html).
+[http://localhost:43147/smile-arcade.html](http://localhost:43147/smile-arcade.html).
 
 ## What’s included
 
-- **Home hub** with the Toothy Town logo and six game cards
+- **Home hub** with the Smile Arcade logo and six game cards
 - **Cavity Catch** — start screen with how to play, then tap wiggly germs before the 45-second timer runs out. Best score is saved in the browser.
 - **Brush Blast** — clean a dirty tooth with three tools: brush plaque to uncover stuck food, blast it, then rinse until it shines.
 - **Smile Match** — flip cards to find matching pairs. Each card shows a dental tool and its name, and the board shuffles every round.
@@ -38,15 +38,16 @@ Next.js, TypeScript, Tailwind CSS, and shadcn/ui. The production build is a stat
 
 ## Host on GitHub Pages
 
-This app cannot be dropped onto Pages as raw source. GitHub Pages only serves static files, so you publish the Next.js export.
+This app cannot be dropped onto Pages as raw source. GitHub Pages only serves static files, so you publish the Next.js export. See `UPLOAD-TO-GITHUB.txt` for the click-by-click upload steps.
 
-The repo already includes `.github/workflows/pages.yml`. After you push this project to GitHub:
+GitHub Actions reads `.github/workflows/pages.yml`. Folders that start with a dot are hidden on Mac and Windows, so a download zip of this project also includes a visible `github` folder with the same workflow. **Rename `github` to `.github` before you upload** if you cannot see the dotted folder.
 
-1. Create a GitHub repository (for example `smile-arcade`) and push `main`.
-2. In the repo open **Settings → Pages**.
-3. Set **Source** to **GitHub Actions**.
-4. Run **Actions → Deploy to GitHub Pages → Run workflow**, or push another commit to `main`.
-5. Play it at `https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO_NAME/`.
+After the files are in a GitHub repository:
+
+1. Open **Settings → Pages**.
+2. Set **Source** to **GitHub Actions**.
+3. Wait for **Actions → Deploy to GitHub Pages** to finish, or push another commit to `main`.
+4. Play it at `https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO_NAME/`.
 
 Project sites automatically use a `/YOUR_REPO_NAME` base path so images, game routes, and the Back button still work. A user/org site named `YOUR_USERNAME.github.io` is hosted at the domain root instead.
 

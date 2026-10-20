@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 120" fill="none">
+  <ellipse cx="70" cy="110" rx="40" ry="6" fill="#354259" opacity=".12" />
+  <g transform="rotate(-16 50 64)">
+    <rect x="16" y="12" width="64" height="90" rx="13" fill="#354259" />
+    <rect x="19.5" y="15.5" width="57" height="83" rx="11" fill="#8461cd" />
+    <rect x="28" y="26" width="41" height="30" rx="8" fill="#fff" />
+    <circle cx="40.5" cy="41" r="6.5" fill="#fec41a" />
+    <circle cx="56.5" cy="41" r="6.5" fill="#fec41a" />
+    <rect x="33" y="66" width="31" height="8" rx="4" fill="#fff" opacity=".38" />
+    <rect x="37" y="80" width="23" height="6" rx="3" fill="#fff" opacity=".22" />
+  </g>
+  <g transform="rotate(14 92 64)">
+    <rect x="60" y="12" width="64" height="90" rx="13" fill="#354259" />
+    <rect x="63.5" y="15.5" width="57" height="83" rx="11" fill="#fec41a" />
+    <rect x="72" y="26" width="41" height="30" rx="8" fill="#fff" />
+    <circle cx="84.5" cy="41" r="6.5" fill="#8461cd" />
+    <circle cx="100.5" cy="41" r="6.5" fill="#8461cd" />
+    <rect x="77" y="66" width="31" height="8" rx="4" fill="#fff" opacity=".5" />
+    <rect x="81" y="80" width="23" height="6" rx="3" fill="#fff" opacity=".28" />
+  </g>
+  <path
+    fill="#88c63d"
+    d="M118 16 121.2 24.2 130 27.5 121.2 30.8 118 39 114.8 30.8 106 27.5 114.8 24.2Z"
+  />
+</svg>

@@ -6,7 +6,7 @@ import { GAMES } from "@/lib/games"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen select-none bg-background">
       <section className="flex flex-col items-center justify-center px-6 pt-8 pb-5 text-center">
         <div className="max-w-2xl">
           <div className="mb-3 inline-flex items-center justify-center rounded-full bg-accent px-3 py-1.5 text-xs font-bold text-accent-foreground">
@@ -44,7 +44,7 @@ export default function Home() {
       </section>
       <footer className="border-t border-border px-6 py-8 text-center">
         <p className="text-sm font-medium text-muted-foreground">
-          Toothy Town · Made for tiny patients · Ask a grown-up if you need help
+          Smile Arcade · Made for tiny patients · Ask a grown-up if you need help
         </p>
       </footer>
     </div>
